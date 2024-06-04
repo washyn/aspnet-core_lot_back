@@ -1,0 +1,1 @@
+dotnet run --project Washyn.UNAJ.Lot --migrate-database
