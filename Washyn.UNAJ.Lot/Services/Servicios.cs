@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
 using Volo.Abp.Domain.Repositories;
+using Washyn.UNAJ.Lot;
 
 namespace Acme.BookStore.Services;
 
@@ -33,43 +34,44 @@ public class SelectAppService : ApplicationService
         _gradoRepository = gradoRepository;
     }
 
-    public async Task<List<SelectListItem>> GetRol()
+    public async Task<List<LookupDto>> GetRol()
     {
         var data = await _rolRepository.GetListAsync();
-        return data.Select(a => new SelectListItem()
+        return data.Select(a => new LookupDto()
         {
-            Text = a.Id.ToString(),
-            Value = a.Nombre
+            Id = a.Id,
+            DisplayName = a.Nombre
         }).ToList();
     }
     
-    public async Task<List<SelectListItem>> GetDocente()
+    public async Task<List<LookupDto>> GetDocente()
     {
         var data = await _docenteRepository.GetListAsync();
-        return data.Select(a => new SelectListItem()
+        return data.Select(a => new LookupDto()
         {
-            Text = a.Id.ToString(),
-            Value = a.ApellidoPaterno +" "+ a.ApellidoMaterno +" "+ a.Nombre
+            Id = a.Id,
+            DisplayName = a.ApellidoPaterno +" "+ a.ApellidoMaterno +" "+ a.Nombre
         }).ToList();
     }
     
-    public async Task<List<SelectListItem>> GetGrado()
+    public async Task<List<LookupDto>> GetGrado()
     {
         var data = await _gradoRepository.GetListAsync();
-        return data.Select(a => new SelectListItem()
+        return data.Select(a => new LookupDto()
         {
-            Text = a.Id.ToString(),
-            Value = a.Nombre
+            Id = a.Id,
+            DisplayName = a.Nombre,
+            AlternativeText = a.Prefix
         }).ToList();
     }
     
-    public async Task<List<SelectListItem>> GetCurso()
+    public async Task<List<LookupDto>> GetCurso()
     {
         var data = await _cursoRepository.GetListAsync();
-        return data.Select(a => new SelectListItem()
+        return data.Select(a => new LookupDto()
         {
-            Text = a.Id.ToString(),
-            Value = a.Nombre
+            Id = a.Id,
+            DisplayName = a.Nombre,
         }).ToList();
     }
 }

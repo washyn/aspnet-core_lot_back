@@ -43,8 +43,8 @@ public class LotDbMigrationService : ITransientDependency
 
         Logger.LogInformation("Started database migrations...");
 
-        // await MigrateDatabaseSchemaAsync();
-        // await SeedDataAsync();
+        await MigrateDatabaseSchemaAsync();
+        await SeedDataAsync();
 
         Logger.LogInformation($"Successfully completed host database migrations.");
 
@@ -79,21 +79,17 @@ public class LotDbMigrationService : ITransientDependency
         // Logger.LogInformation("You can safely end this process...");
     }
 
-    // private async Task MigrateDatabaseSchemaAsync(Tenant? tenant = null)
-    // {
-    //     Logger.LogInformation($"Migrating schema for {(tenant == null ? "host" : tenant.Name + " tenant")} database...");
-    //     await _dbSchemaMigrator.MigrateAsync();
-    // }
-    //
-    // private async Task SeedDataAsync(Tenant? tenant = null)
-    // {
-    //     Logger.LogInformation($"Executing {(tenant == null ? "host" : tenant.Name + " tenant")} database seed...");
-    //
-    //     await _dataSeeder.SeedAsync(new DataSeedContext(tenant?.Id)
-    //         .WithProperty(IdentityDataSeedContributor.AdminEmailPropertyName, IdentityDataSeedContributor.AdminEmailDefaultValue)
-    //         .WithProperty(IdentityDataSeedContributor.AdminPasswordPropertyName, IdentityDataSeedContributor.AdminPasswordDefaultValue)
-    //     );
-    // }
+    private async Task MigrateDatabaseSchemaAsync()
+    {
+        Logger.LogInformation($"Migrating schema for host database...");
+        await _dbSchemaMigrator.MigrateAsync();
+    }
+    
+    private async Task SeedDataAsync()
+    {
+        Logger.LogInformation($"Executing host database seed...");
+        await _dataSeeder.SeedAsync(new DataSeedContext());
+    }
 
     private bool AddInitialMigrationIfNotExist()
     {

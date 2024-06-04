@@ -1,10 +1,18 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Acme.BookStore.Entities;
+using Microsoft.EntityFrameworkCore;
 using Volo.Abp.EntityFrameworkCore;
 
 namespace Washyn.UNAJ.Lot.Data;
 
 public class LotDbContext : AbpDbContext<LotDbContext>
 {
+
+    public DbSet<Curso> Cursos { get; set; }
+    public DbSet<Grado> Grados { get; set; }
+    public DbSet<Rol> Rols { get; set; }
+    public DbSet<Docente> Docentes { get; set; }
+    public DbSet<Sorteo> Sorteo { get; set; }
+    public DbSet<Participante> Participantes { get; set; }
     public LotDbContext(DbContextOptions<LotDbContext> options)
         : base(options)
     {
