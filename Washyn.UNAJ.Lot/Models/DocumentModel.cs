@@ -11,7 +11,7 @@ namespace Washyn.UNAJ.Lot.Models
         public string TestName { get; set; }
         public string RolName { get; set; }
     }
-    
+
     // add this settings via appsettings.json
     public class DocumentOptions
     {
@@ -19,5 +19,7 @@ namespace Washyn.UNAJ.Lot.Models
         public string NumeroCarta { get; set; }
         public string Asunto { get; set; }
         public string NombrePrueba { get; set; }
+        public string Modalidad { get; set; }
+        public DateTime FechaGenerada { get; set; } // TODO: mapp en app settiings.
     }
 }

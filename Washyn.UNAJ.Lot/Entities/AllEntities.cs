@@ -1,5 +1,6 @@
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Domain.Entities;
+using Volo.Abp.Domain.Entities.Auditing;
 
 namespace Acme.BookStore.Entities
 {
@@ -19,7 +20,7 @@ namespace Acme.BookStore.Entities
         public string Nombre { get; set; }
     }
 
-    public class Docente : Entity<Guid>
+    public class Docente : FullAuditedEntity<Guid>
     {
         public string Nombre { get; set; }
         public string ApellidoPaterno { get; set; }
@@ -30,7 +31,7 @@ namespace Acme.BookStore.Entities
         public Area? Area { get; set; }
     }
 
-    public class DocenteDto : EntityDto<Guid>
+    public class DocenteDto : FullAuditedEntityDto<Guid>
     {
         public string Nombre { get; set; }
         public string ApellidoPaterno { get; set; }
@@ -66,7 +67,7 @@ namespace Acme.BookStore.Entities
 
     // for a single process... que es lo que se sortea...
     // como...
-    public class Sorteo : Entity<Guid>
+    public class Sorteo : FullAuditedEntity<Guid>
     {
         public Guid DocenteId { get; set; }
         public Guid RolId { get; set; }

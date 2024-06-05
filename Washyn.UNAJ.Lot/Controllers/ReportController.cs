@@ -12,6 +12,7 @@ using Volo.Abp.Content;
 using Volo.Abp.Domain.Repositories;
 using Volo.Abp.Http;
 using Washyn.UNAJ.Lot.Models;
+using Washyn.UNAJ.Lot.Services;
 namespace Washyn.UNAJ.Lot.Controllers
 {
     [Route("report")]
@@ -36,6 +37,7 @@ namespace Washyn.UNAJ.Lot.Controllers
             return new RemoteStreamContent(ms, "Reporte ejemplo.pdf", MimeTypes.Application.Pdf);
         }
 
+        // 
         private byte[] GenerateDocument(DocenteWithLookup docente)
         {
             // TODO: remove un used variables...
@@ -45,12 +47,9 @@ namespace Washyn.UNAJ.Lot.Controllers
             var documentData = new DocumentModel()
             {
                 Asunto = "SOLICITO AMBIENTE DEL PRIMER PISO REPOSITORIO INSTITUCIONAL Y ALMACÉN",
-                FullName = "CESAR ENRIQUE HUAYTA",
-                DegreeLevel = "DR.",
+                // add from app settings...
                 DateGenerated = DateTime.Now,
                 RolName = "DIGITADOR",
-                TestName = "ORDINARIA 2024-1",
-                NumberLetter = "283-2021-DA-UNAJ",
             };
 
             var data3 = """
@@ -62,7 +61,8 @@ namespace Washyn.UNAJ.Lot.Controllers
                     {
                         page.Size(PageSizes.A4);
                         page.MarginHorizontal(2.5f, Unit.Centimetre);
-                        page.MarginVertical(1, Unit.Centimetre);
+                        page.MarginTop(0.5f, Unit.Centimetre);
+                        page.MarginBottom(1, Unit.Centimetre);
                         page.PageColor(Colors.White);
                         page.DefaultTextStyle(x => x.FontFamily("Arial"));
                         page.DefaultTextStyle(x => x.FontSize(11));
@@ -115,7 +115,7 @@ namespace Washyn.UNAJ.Lot.Controllers
 
                                 x.Item().PaddingVertical(10).Text($"Juliaca, {textDate}").AlignEnd();
 
-                                x.Item().PaddingBottom(10).Text($"CARTA Nº {documentData.NumberLetter}").AlignStart().Underline().Bold();
+                                x.Item().PaddingBottom(10).Text($"CARTA Nº: {options.NumeroCarta}").AlignStart().Underline().Bold();
 
                                 x.Item().Text($"{MapGender(docente.Genero)}:").AlignStart();
                                 x.Item().Text($"{docente.GradoPrefix} {docente.FullName}").AlignStart().Bold();
@@ -131,8 +131,8 @@ namespace Washyn.UNAJ.Lot.Controllers
 
                                     t.Span("Por medio del presesente documento me dirijo a su distinguida persona para expresarle un cordial saludo, asimismo informarle que este ");
                                     t.Span("domingo 31 de marzo ").Bold().Underline();
-                                    t.Span("se desarrollará el examen de admisión en su modalidad");
-                                    t.Span(documentData.TestName);
+                                    t.Span("se desarrollará el examen de admisión en su modalidad ");
+                                    t.Span(options.Modalidad);
                                     t.Span(".");
                                 });
                                 x.Item().Text(t =>
