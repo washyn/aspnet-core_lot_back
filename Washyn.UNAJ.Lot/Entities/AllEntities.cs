@@ -63,6 +63,7 @@ namespace Acme.BookStore.Entities
         public string ApellidoMaterno { get; set; }
         public Gender Genero { get; set; }
         public Guid GradoId { get; set; }
+        public Area? Area { get; set; }
     }
 
     // for a single process... que es lo que se sortea...
@@ -88,8 +89,9 @@ namespace Acme.BookStore.Entities
 
     public enum Area
     {
+        Desconocido,
         Biomedicas,
         Sociales,
-        Desconocido,
+        Ingenierias,
     }
 }

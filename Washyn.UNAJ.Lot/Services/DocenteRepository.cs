@@ -58,6 +58,7 @@ namespace Washyn.UNAJ.Lot.Services
                                 GradoId = docente.GradoId,
                                 GradoName = grado.Nombre,
                                 GradoPrefix = grado.Prefix,
+                                Area = docente.Area,
                             };
             return queryable;
         }
@@ -68,6 +69,4 @@ namespace Washyn.UNAJ.Lot.Services
             return queryable.AsNoTracking().First(a => a.Id == id);
         }
     }
-
-
 }
