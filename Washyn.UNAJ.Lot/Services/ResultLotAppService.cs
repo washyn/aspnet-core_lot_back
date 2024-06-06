@@ -18,7 +18,31 @@ namespace Washyn.UNAJ.Lot.Services
                 {
                     CreationTime = DateTime.Now,
                     DocenteFullName = "Washington Acero",
-                    RolDisplay = "Digitador"
+                    RolDisplay = "DIGITADOR"
+                },
+                new ResultLotDto
+                {
+                    CreationTime = DateTime.Now,
+                    DocenteFullName = "Washington Acero",
+                    RolDisplay = "REVISOR DE SOCIALES"
+                },
+                new ResultLotDto
+                {
+                    CreationTime = DateTime.Now,
+                    DocenteFullName = "Washington Acero",
+                    RolDisplay = "REVISO DE INGENIERIAS"
+                },
+                new ResultLotDto
+                {
+                    CreationTime = DateTime.Now,
+                    DocenteFullName = "Washington Acero",
+                    RolDisplay = "ELABORADOR"
+                },
+                new ResultLotDto
+                {
+                    CreationTime = DateTime.Now,
+                    DocenteFullName = "Washington Acero",
+                    RolDisplay = "REVISOR DE ESTILO"
                 }
             };
             return new PagedResultDto<ResultLotDto>(data.Count, data);
