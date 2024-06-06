@@ -32,7 +32,7 @@ namespace Washyn.UNAJ.Lot.Controllers
         [Route("sample")]
         public async Task<IRemoteStreamContent> GetSamplePdfReport(Guid id)
         {
-            var model = await docenteRepository.GetWithDetails(id);
+            var model = await docenteRepository.GetWithDetails(Guid.Parse("9775A680-767C-4EA4-2409-3A130012A3F2"));
             var ms = new MemoryStream(GenerateDocument(model));
             return new RemoteStreamContent(ms, "Reporte ejemplo.pdf", MimeTypes.Application.Pdf);
         }
