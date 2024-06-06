@@ -20,6 +20,8 @@ namespace Acme.BookStore.Entities
         public string Nombre { get; set; }
     }
 
+    
+    // TODO: can ve add document identifier DNI
     public class Docente : FullAuditedEntity<Guid>
     {
         public string Nombre { get; set; }
