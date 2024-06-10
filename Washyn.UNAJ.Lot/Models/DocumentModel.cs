@@ -21,5 +21,6 @@ namespace Washyn.UNAJ.Lot.Models
         public string NombrePrueba { get; set; }
         public string Modalidad { get; set; }
         public DateTime FechaGenerada { get; set; } // TODO: mapp en app settiings.
+        public int SequenceStart { get; set; }
     }
 }

@@ -28,28 +28,29 @@ namespace Washyn.UNAJ.Lot.Controllers
             this.docenteRepository = docenteRepository;
         }
 
+        // this for single download.
         [HttpGet]
         [Route("sample")]
         public async Task<IRemoteStreamContent> GetSamplePdfReport(Guid id)
         {
-            var model = await docenteRepository.GetWithDetails(Guid.Parse("9775A680-767C-4EA4-2409-3A130012A3F2"));
+            var model = await docenteRepository.GetWithDetails(id);
             var ms = new MemoryStream(GenerateDocument(model));
             return new RemoteStreamContent(ms, "Reporte ejemplo.pdf", MimeTypes.Application.Pdf);
         }
 
-
         [HttpGet]
         [Route("all-lot-result")]
-        public async Task<IRemoteStreamContent> GetAllPdfReport(Guid id)
+        public async Task<IRemoteStreamContent> GetAllPdfReport()
         {
-            var model = await docenteRepository.GetWithDetails(id);
-            var ms = new MemoryStream(GenerateAllDocuments(model));
+            var docentes = await docenteRepository.GetPagedListAsync(0, 1000, null);
+            var ms = new MemoryStream(GenerateAllDocuments(docentes));
             return new RemoteStreamContent(ms, "Reporte ejemplo masivo.pdf", MimeTypes.Application.Pdf);
         }
 
-        private byte[] GenerateAllDocuments(DocenteWithLookup docente)
+        private byte[] GenerateAllDocuments(List<DocenteWithLookup> docentes)
         {
             // TODO: remove un used variables...
+            var sequenceInitial = options.SequenceStart;
 
             QuestPDF.Settings.License = LicenseType.Community;
 
@@ -69,7 +70,7 @@ namespace Washyn.UNAJ.Lot.Controllers
 
             var document = Document.Create(container =>
                 {
-                    for (int i = 0; i < 100; i++)
+                    foreach (var docente in docentes)
                     {
                         container.Page(page =>
                         {
@@ -129,7 +130,7 @@ namespace Washyn.UNAJ.Lot.Controllers
 
                                     x.Item().PaddingVertical(10).Text($"Juliaca, {textDate}").AlignEnd();
 
-                                    x.Item().PaddingBottom(10).Text($"CARTA Nº: {options.NumeroCarta}").AlignStart().Underline().Bold();
+                                    x.Item().PaddingBottom(10).Text($"CARTA Nº: {sequenceInitial++}").AlignStart().Underline().Bold();
 
                                     x.Item().Text($"{MapGender(docente.Genero)}:").AlignStart();
                                     x.Item().Text($"{docente.GradoPrefix} {docente.FullName}").AlignStart().Bold();
