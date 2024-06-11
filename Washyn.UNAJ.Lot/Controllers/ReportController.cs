@@ -44,6 +44,7 @@ namespace Washyn.UNAJ.Lot.Controllers
         {
             var docentes = await docenteRepository.GetPagedListAsync(0, 1000, null);
             var ms = new MemoryStream(GenerateAllDocuments(docentes));
+            throw new UserFriendlyException("Error");
             return new RemoteStreamContent(ms, "Reporte ejemplo masivo.pdf", MimeTypes.Application.Pdf);
         }
 
