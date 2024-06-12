@@ -20,10 +20,11 @@ namespace Acme.BookStore.Entities
         public string Nombre { get; set; }
     }
 
-    
-    // TODO: can ve add document identifier DNI
+
+
     public class Docente : FullAuditedEntity<Guid>
     {
+        public string Dni { get; set; }
         public string Nombre { get; set; }
         public string ApellidoPaterno { get; set; }
         public string ApellidoMaterno { get; set; }
@@ -35,6 +36,7 @@ namespace Acme.BookStore.Entities
 
     public class DocenteDto : FullAuditedEntityDto<Guid>
     {
+        public string Dni { get; set; }
         public string Nombre { get; set; }
         public string ApellidoPaterno { get; set; }
         public string ApellidoMaterno { get; set; }
@@ -45,6 +47,7 @@ namespace Acme.BookStore.Entities
 
     public class DocenteWithLookup : FullAuditedEntityDto<Guid>
     {
+        public string Dni { get; set; }
         public string Nombre { get; set; }
         public string ApellidoPaterno { get; set; }
         public string ApellidoMaterno { get; set; }
@@ -60,6 +63,7 @@ namespace Acme.BookStore.Entities
 
     public class CreateUpdateDocenteDto : EntityDto
     {
+        public string Dni { get; set; }
         public string Nombre { get; set; }
         public string ApellidoPaterno { get; set; }
         public string ApellidoMaterno { get; set; }

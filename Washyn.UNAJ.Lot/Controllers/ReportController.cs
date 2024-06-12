@@ -50,7 +50,6 @@ namespace Washyn.UNAJ.Lot.Controllers
 
         private byte[] GenerateAllDocuments(List<DocenteWithLookup> docentes)
         {
-            // TODO: remove un used variables...
             var sequenceInitial = options.SequenceStart;
 
             QuestPDF.Settings.License = LicenseType.Community;
@@ -62,7 +61,7 @@ namespace Washyn.UNAJ.Lot.Controllers
                 DateGenerated = DateTime.Now,
                 RolName = "DIGITADOR",
             };
-            
+
             var document = Document.Create(container =>
                 {
                     foreach (var docente in docentes)
@@ -189,7 +188,6 @@ namespace Washyn.UNAJ.Lot.Controllers
         // TODO: add extension method for add page and receve model....
         private byte[] GenerateDocument(DocenteWithLookup docente)
         {
-            // TODO: remove un used variables...
             QuestPDF.Settings.License = LicenseType.Community;
 
             var culture = new CultureInfo("es-pe");
@@ -268,7 +266,7 @@ namespace Washyn.UNAJ.Lot.Controllers
                                 x.Item().Text($"{MapGender(docente.Genero)}:").AlignStart();
                                 x.Item().Text($"{docente.GradoPrefix} {docente.FullName}").AlignStart().Bold();
                                 x.Item().PaddingBottom(10).Text($"PRESENTE.-").AlignStart().Underline();
-                                
+
                                 x.Item().Text($"ASUNTO:  {options.Asunto}").Bold();
                                 var text = @"De mi especial consideración;";
 

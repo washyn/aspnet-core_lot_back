@@ -9,7 +9,7 @@ using Volo.Abp.Domain.Repositories.EntityFrameworkCore;
 using Volo.Abp.EntityFrameworkCore;
 using Washyn.UNAJ.Lot;
 using Washyn.UNAJ.Lot.Data;
-                     
+
 namespace Washyn.UNAJ.Lot.Services
 {
     public interface IDocenteRepository : IRepository<Docente, Guid>
@@ -51,6 +51,7 @@ namespace Washyn.UNAJ.Lot.Services
                             select new DocenteWithLookup
                             {
                                 Id = docente.Id,
+                                Dni = docente.Dni,
                                 ApellidoMaterno = docente.ApellidoMaterno,
                                 ApellidoPaterno = docente.ApellidoPaterno,
                                 Nombre = docente.Nombre,
