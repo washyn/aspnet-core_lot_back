@@ -22,13 +22,13 @@ namespace Washyn.UNAJ.Lot.Controllers
         private readonly DocumentOptions options;
         private readonly IDocenteRepository docenteRepository;
 
-        public ReportController(IOptions<DocumentOptions> options, IDocenteRepository docenteRepository)
+        public ReportController(IOptionsMonitor<DocumentOptions> options, IDocenteRepository docenteRepository)
         {
-            this.options = options.Value;
+            this.options = options.CurrentValue;
             this.docenteRepository = docenteRepository;
         }
 
-        // this for single download.
+        // this for single download...
         [HttpGet]
         [Route("sample")]
         public async Task<IRemoteStreamContent> GetSamplePdfReport(Guid id)
@@ -57,17 +57,11 @@ namespace Washyn.UNAJ.Lot.Controllers
             var culture = new CultureInfo("es-pe");
             var documentData = new DocumentModel()
             {
-                Asunto = "SOLICITO AMBIENTE DEL PRIMER PISO REPOSITORIO INSTITUCIONAL Y ALMACÉN",
                 // add from app settings...
                 DateGenerated = DateTime.Now,
                 RolName = "DIGITADOR",
             };
-
-            var data3 = """
-                        Aprovecho la oportunidad para reiterarle los sentimientos de mi mayor consideracion y estima personal.
-                        """;
-
-
+            
             var document = Document.Create(container =>
                 {
                     foreach (var docente in docentes)
@@ -130,13 +124,13 @@ namespace Washyn.UNAJ.Lot.Controllers
 
                                     x.Item().PaddingVertical(10).Text($"Juliaca, {textDate}").AlignEnd();
 
-                                    x.Item().PaddingBottom(10).Text($"CARTA Nº: {sequenceInitial++}").AlignStart().Underline().Bold();
+                                    x.Item().PaddingBottom(10).Text($"CARTA Nº {sequenceInitial++}{options.NumeroCarta}").AlignStart().Underline().Bold();
 
                                     x.Item().Text($"{MapGender(docente.Genero)}:").AlignStart();
                                     x.Item().Text($"{docente.GradoPrefix} {docente.FullName}").AlignStart().Bold();
                                     x.Item().PaddingBottom(10).Text($"PRESENTE.-").AlignStart().Underline();
 
-                                    x.Item().Text($"ASUNTO:  {documentData.Asunto}").Bold();
+                                    x.Item().Text($"ASUNTO:  {options.Asunto}").Bold();
                                     var text = @"De mi especial consideración;";
 
                                     x.Item().PaddingVertical(5).Text(text);
@@ -145,7 +139,8 @@ namespace Washyn.UNAJ.Lot.Controllers
                                         t.Justify();
 
                                         t.Span("Por medio del presesente documento me dirijo a su distinguida persona para expresarle un cordial saludo, asimismo informarle que este ");
-                                        t.Span("domingo 31 de marzo ").Bold().Underline();
+                                        t.Span(options.FechaExamen).Bold().Underline();
+                                        t.Span(" ");
                                         t.Span("se desarrollará el examen de admisión en su modalidad ");
                                         t.Span(options.Modalidad);
                                         t.Span(".");
@@ -163,7 +158,7 @@ namespace Washyn.UNAJ.Lot.Controllers
                                     x.Item().PaddingBottom(10).Text(t =>
                                     {
                                         t.Justify();
-                                        t.Span(data3);
+                                        t.Span(options.Despedida);
                                     });
 
                                     x.Item().Text($"Atentamente,").AlignCenter();
@@ -190,6 +185,7 @@ namespace Washyn.UNAJ.Lot.Controllers
             return document.GeneratePdf();
         }
 
+        // TODO: add extension method for add page and receve model....
         private byte[] GenerateDocument(DocenteWithLookup docente)
         {
             // TODO: remove un used variables...
@@ -198,7 +194,6 @@ namespace Washyn.UNAJ.Lot.Controllers
             var culture = new CultureInfo("es-pe");
             var documentData = new DocumentModel()
             {
-                Asunto = "SOLICITO AMBIENTE DEL PRIMER PISO REPOSITORIO INSTITUCIONAL Y ALMACÉN",
                 // add from app settings...
                 DateGenerated = DateTime.Now,
                 RolName = "DIGITADOR",
@@ -272,8 +267,8 @@ namespace Washyn.UNAJ.Lot.Controllers
                                 x.Item().Text($"{MapGender(docente.Genero)}:").AlignStart();
                                 x.Item().Text($"{docente.GradoPrefix} {docente.FullName}").AlignStart().Bold();
                                 x.Item().PaddingBottom(10).Text($"PRESENTE.-").AlignStart().Underline();
-
-                                x.Item().Text($"ASUNTO:  {documentData.Asunto}").Bold();
+                                
+                                x.Item().Text($"ASUNTO:  {options.Asunto}").Bold();
                                 var text = @"De mi especial consideración;";
 
                                 x.Item().PaddingVertical(5).Text(text);

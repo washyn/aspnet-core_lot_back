@@ -43,7 +43,7 @@ namespace Acme.BookStore.Entities
         public Area? Area { get; set; }
     }
 
-    public class DocenteWithLookup : EntityDto<Guid>
+    public class DocenteWithLookup : FullAuditedEntityDto<Guid>
     {
         public string Nombre { get; set; }
         public string ApellidoPaterno { get; set; }

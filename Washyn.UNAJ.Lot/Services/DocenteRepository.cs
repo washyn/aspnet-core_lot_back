@@ -9,7 +9,7 @@ using Volo.Abp.Domain.Repositories.EntityFrameworkCore;
 using Volo.Abp.EntityFrameworkCore;
 using Washyn.UNAJ.Lot;
 using Washyn.UNAJ.Lot.Data;
-
+                     
 namespace Washyn.UNAJ.Lot.Services
 {
     public interface IDocenteRepository : IRepository<Docente, Guid>
@@ -59,6 +59,13 @@ namespace Washyn.UNAJ.Lot.Services
                                 GradoName = grado.Nombre,
                                 GradoPrefix = grado.Prefix,
                                 Area = docente.Area,
+                                CreationTime = docente.CreationTime,
+                                CreatorId = docente.CreatorId,
+                                DeleterId = docente.DeleterId,
+                                DeletionTime = docente.DeletionTime,
+                                IsDeleted = docente.IsDeleted,
+                                LastModificationTime = docente.LastModificationTime,
+                                LastModifierId = docente.LastModifierId,
                             };
             return queryable;
         }
