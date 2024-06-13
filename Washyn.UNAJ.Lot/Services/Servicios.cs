@@ -1,5 +1,6 @@
 ﻿using System.Linq.Dynamic.Core;
 using Acme.BookStore.Entities;
+using Volo.Abp;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
 using Volo.Abp.Domain.Repositories;
@@ -18,6 +19,17 @@ public class DocenteAppService : CrudAppService<Docente, DocenteDto, DocenteWith
         , IDocenteRepository docenteRepository) : base(repository)
     {
         this.docenteRepository = docenteRepository;
+    }
+
+    public override async Task<DocenteDto> CreateAsync(CreateUpdateDocenteDto input)
+    {
+        var exists = await Repository.AnyAsync(a => a.Dni == input.Dni);
+        if (exists)
+        {
+            throw new UserFriendlyException($"El numero de documento {input.Dni} ya se encuentra registrado.");
+        }
+
+        return await base.CreateAsync(input);
     }
 
     public override async Task<PagedResultDto<DocenteWithLookup>> GetListAsync(DocenteFilter input)

@@ -10,7 +10,7 @@ namespace Washyn.UNAJ.Lot.Services
         {
         }
 
-        public async Task<PagedResultDto<ResultLotDto>> GetListAsync()
+        public async Task<PagedResultDto<ResultLotDto>> GetListAsync(ResultLotFilterDto filter)
         {
             var data = new List<ResultLotDto>()
             {
@@ -47,6 +47,11 @@ namespace Washyn.UNAJ.Lot.Services
             };
             return new PagedResultDto<ResultLotDto>(data.Count, data);
         }
+    }
+
+    public class ResultLotFilterDto : PagedAndSortedResultRequestDto
+    {
+        public string? Filter { get; set; }
     }
 
     public class ResultLotDto : FullAuditedEntityDto
