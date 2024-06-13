@@ -57,9 +57,13 @@ namespace Acme.BookStore.Entities
         public string GradoPrefix { get; set; }
         public Area? Area { get; set; }
 
-        public string FullName => Nombre + " " + ApellidoPaterno + " " + ApellidoMaterno;
+        public string FullName { get; set; }
     }
 
+    public class DocenteFilter : PagedAndSortedResultRequestDto
+    {
+        public string? Filter { get; set; }
+    }
 
     public class CreateUpdateDocenteDto : EntityDto
     {

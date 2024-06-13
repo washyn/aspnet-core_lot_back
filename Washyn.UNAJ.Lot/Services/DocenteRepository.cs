@@ -14,8 +14,8 @@ namespace Washyn.UNAJ.Lot.Services
 {
     public interface IDocenteRepository : IRepository<Docente, Guid>
     {
-        Task<long> GetCountAsync();
-        Task<List<DocenteWithLookup>> GetPagedListAsync(int skipCount = 0, int maxResultCount = int.MaxValue, string sorting = null);
+        Task<long> GetCountAsync(string? filter = null);
+        Task<List<DocenteWithLookup>> GetPagedListAsync(string? filter = null, int skipCount = 0, int maxResultCount = int.MaxValue, string sorting = null);
         Task<DocenteWithLookup> GetWithDetails(Guid id);
     }
 
@@ -25,22 +25,22 @@ namespace Washyn.UNAJ.Lot.Services
         {
         }
 
-        public async Task<List<DocenteWithLookup>> GetPagedListAsync(int skipCount = 0, int maxResultCount = int.MaxValue, string sorting = null)
+        public async Task<List<DocenteWithLookup>> GetPagedListAsync(string? filter = null, int skipCount = 0, int maxResultCount = int.MaxValue, string sorting = null)
         {
-            var query = AplyFilter(await GetQueryableAsync());
+            var query = AplyFilter(await GetQueryableAsync(), filter);
             query = string.IsNullOrEmpty(sorting) ? query : query.OrderBy(sorting);
             return await query.PageBy(skipCount, maxResultCount).ToListAsync();
         }
 
-        public async Task<long> GetCountAsync()
+        public async Task<long> GetCountAsync(string? filter = null)
         {
-            var query = AplyFilter(await GetQueryableAsync());
+            var query = AplyFilter(await GetQueryableAsync(), filter);
             return await query.LongCountAsync();
         }
 
-        protected virtual IQueryable<DocenteWithLookup> AplyFilter(IQueryable<DocenteWithLookup> query)
+        protected virtual IQueryable<DocenteWithLookup> AplyFilter(IQueryable<DocenteWithLookup> query, string? filter = null)
         {
-            return query;
+            return query.WhereIf(!string.IsNullOrEmpty(filter), a => a.FullName.Contains(filter));
         }
 
         public async Task<IQueryable<DocenteWithLookup>> GetQueryableAsync()
@@ -55,6 +55,7 @@ namespace Washyn.UNAJ.Lot.Services
                                 ApellidoMaterno = docente.ApellidoMaterno,
                                 ApellidoPaterno = docente.ApellidoPaterno,
                                 Nombre = docente.Nombre,
+                                FullName = docente.Nombre + " " + docente.ApellidoPaterno + " " + docente.ApellidoMaterno,
                                 Genero = docente.Genero,
                                 GradoId = docente.GradoId,
                                 GradoName = grado.Nombre,

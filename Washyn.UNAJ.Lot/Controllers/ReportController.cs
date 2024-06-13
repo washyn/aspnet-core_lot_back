@@ -42,10 +42,9 @@ namespace Washyn.UNAJ.Lot.Controllers
         [Route("all-lot-result")]
         public async Task<IRemoteStreamContent> GetAllPdfReport()
         {
-            var docentes = await docenteRepository.GetPagedListAsync(0, 1000, null);
+            var docentes = await docenteRepository.GetPagedListAsync(null, 0, 1000, null);
             var ms = new MemoryStream(GenerateAllDocuments(docentes));
-            throw new UserFriendlyException("Error");
-            return new RemoteStreamContent(ms, "Reporte ejemplo masivo.pdf", MimeTypes.Application.Pdf);
+            return new RemoteStreamContent(ms, "Reporte masivo.pdf", MimeTypes.Application.Pdf);
         }
 
         private byte[] GenerateAllDocuments(List<DocenteWithLookup> docentes)
@@ -153,7 +152,7 @@ namespace Washyn.UNAJ.Lot.Controllers
                                         t.Span(" en calidad de ");
                                         t.Span("DIGITADOR");
                                         t.Span(
-                                            " de examen en el proceso en mención; asismismo, poner de su conocimiento que debera realizar coordinaciones con el responsable de su comisión.");
+                                            " de examen en el proceso en mención; asismismo, poner de su conocimiento que debera realizar coordinaciones con el equipo de su comisión.");
                                     });
                                     x.Item().PaddingBottom(10).Text(t =>
                                     {

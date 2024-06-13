@@ -1,19 +1,14 @@
 ﻿using System.Linq.Dynamic.Core;
 using Acme.BookStore.Entities;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
 using Volo.Abp.Domain.Repositories;
-using Volo.Abp.Domain.Repositories.EntityFrameworkCore;
-using Volo.Abp.EntityFrameworkCore;
 using Washyn.UNAJ.Lot;
-using Washyn.UNAJ.Lot.Data;
 using Washyn.UNAJ.Lot.Services;
 
 namespace Acme.BookStore.Services;
 
-public class DocenteAppService : CrudAppService<Docente, DocenteDto, DocenteWithLookup, Guid, PagedAndSortedResultRequestDto,
+public class DocenteAppService : CrudAppService<Docente, DocenteDto, DocenteWithLookup, Guid, DocenteFilter,
     CreateUpdateDocenteDto, CreateUpdateDocenteDto>
 {
     private readonly IDocenteRepository docenteRepository;
@@ -25,10 +20,10 @@ public class DocenteAppService : CrudAppService<Docente, DocenteDto, DocenteWith
         this.docenteRepository = docenteRepository;
     }
 
-    public override async Task<PagedResultDto<DocenteWithLookup>> GetListAsync(PagedAndSortedResultRequestDto input)
+    public override async Task<PagedResultDto<DocenteWithLookup>> GetListAsync(DocenteFilter input)
     {
-        var totalCount = await docenteRepository.GetCountAsync();
-        var data = await docenteRepository.GetPagedListAsync(input.SkipCount, input.MaxResultCount, input.Sorting);
+        var totalCount = await docenteRepository.GetCountAsync(input.Filter);
+        var data = await docenteRepository.GetPagedListAsync(input.Filter, input.SkipCount, input.MaxResultCount, input.Sorting);
         return new PagedResultDto<DocenteWithLookup>(totalCount, data);
     }
 }
