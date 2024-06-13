@@ -1,13 +1,9 @@
 using System.Linq.Dynamic.Core;
 using Acme.BookStore.Entities;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Volo.Abp.Application.Dtos;
-using Volo.Abp.Application.Services;
 using Volo.Abp.Domain.Repositories;
 using Volo.Abp.Domain.Repositories.EntityFrameworkCore;
 using Volo.Abp.EntityFrameworkCore;
-using Washyn.UNAJ.Lot;
 using Washyn.UNAJ.Lot.Data;
 
 namespace Washyn.UNAJ.Lot.Services
@@ -40,7 +36,7 @@ namespace Washyn.UNAJ.Lot.Services
 
         protected virtual IQueryable<DocenteWithLookup> AplyFilter(IQueryable<DocenteWithLookup> query, string? filter = null)
         {
-            return query.WhereIf(!string.IsNullOrEmpty(filter), a => a.FullName.Contains(filter));
+            return query.WhereIf(!string.IsNullOrEmpty(filter), a => a.FullName.ToLower().Contains(filter.ToLower()));
         }
 
         public async Task<IQueryable<DocenteWithLookup>> GetQueryableAsync()
