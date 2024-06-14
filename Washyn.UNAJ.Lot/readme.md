@@ -30,3 +30,8 @@
   - Pantalla en blanco despues de registros de docentes, msg de success.
 - Front desarrollo de vista de lista de docentes registrados en lista
 - Add area, para docente,as nullable
+
+# IMPROVEMENT
+
+- Can be add landing page for register docetnes...
+- Add http error interceptor por mientras...
