@@ -1,57 +1,47 @@
+using Acme.BookStore.Entities;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
 using Volo.Abp.Domain.Entities.Auditing;
+using Volo.Abp.Domain.Repositories;
+using Washyn.UNAJ.Lot.Controllers;
 
 namespace Washyn.UNAJ.Lot.Services
 {
     public class ResultLotAppService : ApplicationService
     {
-        public ResultLotAppService()
+        private readonly ILotResultRepository lotResultRepository;
+
+        public ResultLotAppService(ILotResultRepository lotResultRepository)
         {
+            this.lotResultRepository = lotResultRepository;
         }
 
-        public async Task<PagedResultDto<ResultLotDto>> GetListAsync(ResultLotFilterDto filter)
+        public async Task CreateLotAsync(CreateLotResultDto create)
         {
-            var data = new List<ResultLotDto>()
+            await lotResultRepository.InsertAsync(new Sorteo
             {
-                new ResultLotDto
-                {
-                    CreationTime = DateTime.Now,
-                    DocenteFullName = "Washington Acero",
-                    RolDisplay = "DIGITADOR"
-                },
-                new ResultLotDto
-                {
-                    CreationTime = DateTime.Now,
-                    DocenteFullName = "Washington Acero",
-                    RolDisplay = "REVISOR DE SOCIALES"
-                },
-                new ResultLotDto
-                {
-                    CreationTime = DateTime.Now,
-                    DocenteFullName = "Washington Acero",
-                    RolDisplay = "REVISO DE INGENIERIAS"
-                },
-                new ResultLotDto
-                {
-                    CreationTime = DateTime.Now,
-                    DocenteFullName = "Washington Acero",
-                    RolDisplay = "ELABORADOR"
-                },
-                new ResultLotDto
-                {
-                    CreationTime = DateTime.Now,
-                    DocenteFullName = "Washington Acero",
-                    RolDisplay = "REVISOR DE ESTILO"
-                }
-            };
-            return new PagedResultDto<ResultLotDto>(data.Count, data);
+                RolId = create.RoleId,
+                DocenteId = create.DocenteId
+            });
+        }
+
+        public async Task<PagedResultDto<DocenteRoleData>> GetListAsync(ResultLotFilterDto input)
+        {
+            var totalCount = await lotResultRepository.GetCountAsync(input.Filter);
+            var data = await lotResultRepository.GetPagedListAsync(input.Filter, input.SkipCount, input.MaxResultCount, input.Sorting);
+            return new PagedResultDto<DocenteRoleData>(totalCount, data);
         }
     }
 
     public class ResultLotFilterDto : PagedAndSortedResultRequestDto
     {
         public string? Filter { get; set; }
+    }
+
+    public class CreateLotResultDto
+    {
+        public Guid DocenteId { get; set; }
+        public Guid RoleId { get; set; }
     }
 
     public class ResultLotDto : FullAuditedEntityDto

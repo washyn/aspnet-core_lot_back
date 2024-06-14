@@ -15,8 +15,8 @@ public class DocenteAppService : CrudAppService<Docente, DocenteDto, DocenteWith
     private readonly IDocenteRepository docenteRepository;
 
     public DocenteAppService(
-        IRepository<Docente, Guid> repository
-        , IDocenteRepository docenteRepository) : base(repository)
+        IRepository<Docente, Guid> repository,
+        IDocenteRepository docenteRepository) : base(repository)
     {
         this.docenteRepository = docenteRepository;
     }

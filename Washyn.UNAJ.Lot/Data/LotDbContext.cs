@@ -1,6 +1,7 @@
 ﻿using Acme.BookStore.Entities;
 using Microsoft.EntityFrameworkCore;
 using Volo.Abp.EntityFrameworkCore;
+using Volo.Abp.EntityFrameworkCore.Modeling;
 
 namespace Washyn.UNAJ.Lot.Data;
 
@@ -25,5 +26,11 @@ public class LotDbContext : AbpDbContext<LotDbContext>
         /* Include modules to your migration db context */
 
         /* Configure your own entities here */
+
+        builder.Entity<Sorteo>(b =>
+        {
+            b.ConfigureByConvention();
+            b.HasKey(c => new { c.RolId, c.DocenteId });
+        });
     }
 }

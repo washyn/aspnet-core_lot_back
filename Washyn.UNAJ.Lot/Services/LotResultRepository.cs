@@ -41,32 +41,35 @@ namespace Washyn.UNAJ.Lot
 
         public async Task<IQueryable<DocenteRoleData>> GetQueryableAsync()
         {
-            // var dbContext = await GetDbContextAsync();
-            // var queryable = from docente in dbContext.Docentes
-            //                 join grado in dbContext.Grados on docente.GradoId equals grado.Id
-            //                 select new DocenteWithLookup
-            //                 {
-            //                     Id = docente.Id,
-            //                     Dni = docente.Dni,
-            //                     ApellidoMaterno = docente.ApellidoMaterno,
-            //                     ApellidoPaterno = docente.ApellidoPaterno,
-            //                     Nombre = docente.Nombre,
-            //                     FullName = docente.Nombre + " " + docente.ApellidoPaterno + " " + docente.ApellidoMaterno,
-            //                     Genero = docente.Genero,
-            //                     GradoId = docente.GradoId,
-            //                     GradoName = grado.Nombre,
-            //                     GradoPrefix = grado.Prefix,
-            //                     Area = docente.Area,
-            //                     CreationTime = docente.CreationTime,
-            //                     CreatorId = docente.CreatorId,
-            //                     DeleterId = docente.DeleterId,
-            //                     DeletionTime = docente.DeletionTime,
-            //                     IsDeleted = docente.IsDeleted,
-            //                     LastModificationTime = docente.LastModificationTime,
-            //                     LastModifierId = docente.LastModifierId,
-            //                 };
-            // return queryable;
-            return new List<DocenteRoleData>().AsQueryable();
+            var dbContext = await GetDbContextAsync();
+            var queryable = from sorteo in dbContext.Sorteo
+                            join docente in dbContext.Docentes on sorteo.DocenteId equals docente.Id
+                            join rol in dbContext.Rols on sorteo.RolId equals rol.Id
+                            // join grado in dbContext.Grados on docente.Id equals grado.Id
+
+                            select new DocenteRoleData
+                            {
+                                Id = docente.Id,
+                                Dni = docente.Dni,
+                                ApellidoMaterno = docente.ApellidoMaterno,
+                                ApellidoPaterno = docente.ApellidoPaterno,
+                                Nombre = docente.Nombre,
+                                FullName = docente.Nombre + " " + docente.ApellidoPaterno + " " + docente.ApellidoMaterno,
+                                Genero = docente.Genero,
+                                GradoId = docente.GradoId,
+                                Area = docente.Area,
+                                CreationTime = docente.CreationTime,
+                                CreatorId = docente.CreatorId,
+                                DeleterId = docente.DeleterId,
+                                DeletionTime = docente.DeletionTime,
+                                IsDeleted = docente.IsDeleted,
+                                LastModificationTime = docente.LastModificationTime,
+                                LastModifierId = docente.LastModifierId,
+                                // GradoName = grado.Nombre,
+                                // GradoPrefix = grado.Prefix,
+                                RolName = rol.Nombre
+                            };
+            return queryable;
         }
     }
 }
