@@ -30,6 +30,13 @@ namespace Washyn.UNAJ.Lot.Controllers
             this.lotResultRepository = lotResultRepository;
         }
 
+        [HttpGet]
+        [Route("error-frieldy-sample")]
+        public async Task SampleErrorFriendly()
+        {
+            throw new UserFriendlyException("Error fliendlyyyyyyyy");
+        }
+
         // this for single download...
         // [HttpGet]
         // [Route("sample")]

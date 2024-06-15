@@ -107,8 +107,8 @@ public class LotModule : AbpModule
 
             options.DefaultResourceType = typeof(LotResource);
 
-            options.Languages.Add(new LanguageInfo("en", "en", "English"));
             options.Languages.Add(new LanguageInfo("es", "es", "Español"));
+            options.Languages.Add(new LanguageInfo("es", "es-pe", "Español Peru"));
 
         });
 
