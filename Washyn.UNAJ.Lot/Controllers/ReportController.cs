@@ -30,6 +30,7 @@ namespace Washyn.UNAJ.Lot.Controllers
             this.lotResultRepository = lotResultRepository;
         }
 
+        // lanzar todos los tipos de errores... de abp
         [HttpGet]
         [Route("error-frieldy-sample")]
         public async Task SampleErrorFriendly()
@@ -185,7 +186,7 @@ namespace Washyn.UNAJ.Lot.Controllers
             return document.GeneratePdf();
         }
 
-        // TODO: add extension method for add page and receve model ...
+        // IMPROVE: add extension method for add page and receve model ...
         private byte[] GenerateDocument(DocenteWithLookup docente)
         {
             QuestPDF.Settings.License = LicenseType.Community;
