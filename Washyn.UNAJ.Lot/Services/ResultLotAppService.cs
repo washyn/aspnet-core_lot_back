@@ -1,4 +1,5 @@
 using Acme.BookStore.Entities;
+using Volo.Abp;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
 using Volo.Abp.Domain.Entities.Auditing;
@@ -18,6 +19,14 @@ namespace Washyn.UNAJ.Lot.Services
 
         public async Task CreateLotAsync(CreateLotResultDto create)
         {
+            var exits = await lotResultRepository
+                .AnyAsync(a => a.DocenteId == create.DocenteId && a.RolId == create.RoleId);
+
+            if (exits)
+            {
+                throw new UserFriendlyException("Ya existe un rol registrado para este participante.");
+            }
+
             await lotResultRepository.InsertAsync(new Sorteo
             {
                 RolId = create.RoleId,
