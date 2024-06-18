@@ -97,9 +97,7 @@ namespace Acme.BookStore.Entities
         public Guid GradoId { get; set; }
         public Area? Area { get; set; }
     }
-    // TODO: evitar duplicados... add pk composite...
-    // for a single process... que es lo que se sortea...
-    // como...
+
     public class Sorteo : IEntity, IHasDeletionTime, ISoftDelete, IHasCreationTime, IHasModificationTime, ICreationAuditedObject
     {
         public Guid DocenteId { get; set; }
