@@ -17,6 +17,7 @@ using Volo.Abp.Localization.ExceptionHandling;
 using Volo.Abp.Modularity;
 using Volo.Abp.MultiTenancy;
 using Volo.Abp.Swashbuckle;
+using Volo.Abp.Timing;
 using Volo.Abp.UI.Navigation.Urls;
 using Volo.Abp.Validation.Localization;
 using Volo.Abp.VirtualFileSystem;
@@ -51,7 +52,6 @@ public class LotModule : AbpModule
                 typeof(LotResource)
             );
         });
-
     }
 
     public override void ConfigureServices(ServiceConfigurationContext context)
@@ -63,6 +63,11 @@ public class LotModule : AbpModule
             .AddOptions<DocumentOptions>()
             .BindConfiguration(nameof(DocumentOptions));
 
+        Configure<AbpClockOptions>(options =>
+        {
+            options.Kind = DateTimeKind.Local;
+        });
+         
         ConfigureMultiTenancy();
         ConfigureUrls(configuration);
         ConfigureAutoMapper(context);
@@ -107,8 +112,8 @@ public class LotModule : AbpModule
 
             options.DefaultResourceType = typeof(LotResource);
 
-            options.Languages.Add(new LanguageInfo("es", "es", "Español"));
-            options.Languages.Add(new LanguageInfo("es", "es-pe", "Español Peru"));
+            // options.Languages.Add(new LanguageInfo("es", "es", "Español"));
+            options.Languages.Add(new LanguageInfo("es-pe", "es-pe", "Español Peru"));
 
         });
 
