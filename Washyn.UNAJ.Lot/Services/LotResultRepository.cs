@@ -16,8 +16,8 @@ namespace Washyn.UNAJ.Lot
         Task<List<DocenteRoleData>> GetPagedListAsync(string? filter = null, int skipCount = 0,
             int maxResultCount = int.MaxValue, string sorting = null);
 
-        Task<List<DocenteWithLookup>> GetWithoutLot();
-        Task<List<DocenteWithLookup>> GetAlreadyWithLot();
+        Task<List<DocenteWithRolDto>> GetWithoutLot();
+        Task<List<DocenteWithRolDto>> GetAlreadyWithLot();
     }
 
     public class LotResultRepository : EfCoreRepository<LotDbContext, Sorteo>, ILotResultRepository
@@ -34,12 +34,13 @@ namespace Washyn.UNAJ.Lot
             return await query.PageBy(skipCount, maxResultCount).ToListAsync();
         }
 
-        public async Task<List<DocenteWithLookup>> GetAlreadyWithLot()
+        public async Task<List<DocenteWithRolDto>> GetAlreadyWithLot()
         {
             var dbContext = await this.GetDbContextAsync();
             var queryable = from sorteo in dbContext.Sorteo
                 join docente in dbContext.Docentes on sorteo.DocenteId equals docente.Id
-                select new DocenteWithLookup()
+                join rol in dbContext.Rols on sorteo.RolId equals rol.Id
+                select new DocenteWithRolDto()
                 {
                     Id = docente.Id,
                     Dni = docente.Dni,
@@ -50,26 +51,21 @@ namespace Washyn.UNAJ.Lot
                     Genero = docente.Genero,
                     GradoId = docente.GradoId,
                     Area = docente.Area,
-                    CreationTime = docente.CreationTime,
-                    CreatorId = docente.CreatorId,
-                    DeleterId = docente.DeleterId,
-                    DeletionTime = docente.DeletionTime,
-                    IsDeleted = docente.IsDeleted,
-                    LastModificationTime = docente.LastModificationTime,
-                    LastModifierId = docente.LastModifierId,
+                    RolId = rol.Id,
+                    RolName = rol.Nombre
                 };
             return await queryable.ToListAsync();
         }
 
 
-        public async Task<List<DocenteWithLookup>> GetWithoutLot()
+        public async Task<List<DocenteWithRolDto>> GetWithoutLot()
         {
             var dbContext = await this.GetDbContextAsync();
             var query = from docente in dbContext.Docentes
                 join sorteo in dbContext.Sorteo on docente.Id equals sorteo.DocenteId into sorteoGroup
                 from sg in sorteoGroup.DefaultIfEmpty()
                 where sg == null
-                select new DocenteWithLookup
+                select new DocenteWithRolDto
                 {
                     Id = docente.Id,
                     Dni = docente.Dni,
@@ -80,13 +76,6 @@ namespace Washyn.UNAJ.Lot
                     Genero = docente.Genero,
                     GradoId = docente.GradoId,
                     Area = docente.Area,
-                    CreationTime = docente.CreationTime,
-                    CreatorId = docente.CreatorId,
-                    DeleterId = docente.DeleterId,
-                    DeletionTime = docente.DeletionTime,
-                    IsDeleted = docente.IsDeleted,
-                    LastModificationTime = docente.LastModificationTime,
-                    LastModifierId = docente.LastModifierId,
                 };
 
             var resultList = await query.ToListAsync();
