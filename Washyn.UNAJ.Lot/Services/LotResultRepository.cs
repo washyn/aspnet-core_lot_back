@@ -61,6 +61,7 @@ namespace Washyn.UNAJ.Lot
             return await queryable.ToListAsync();
         }
 
+        // TODO: implementar, obtener todos los docentes pendientes de sorteo...
         public async Task<List<DocenteWithLookup>> GetWithoutLot()
         {
             var dbContext = await this.GetDbContextAsync();
