@@ -12,7 +12,12 @@ namespace Washyn.UNAJ.Lot
     public interface ILotResultRepository : IRepository<Sorteo>
     {
         Task<long> GetCountAsync(string? filter = null);
-        Task<List<DocenteRoleData>> GetPagedListAsync(string? filter = null, int skipCount = 0, int maxResultCount = int.MaxValue, string sorting = null);
+
+        Task<List<DocenteRoleData>> GetPagedListAsync(string? filter = null, int skipCount = 0,
+            int maxResultCount = int.MaxValue, string sorting = null);
+
+        Task<List<DocenteWithLookup>> GetWithoutLot();
+        Task<List<DocenteWithLookup>> GetAlreadyWithLot();
     }
 
     public class LotResultRepository : EfCoreRepository<LotDbContext, Sorteo>, ILotResultRepository
@@ -21,11 +26,66 @@ namespace Washyn.UNAJ.Lot
         {
         }
 
-        public async Task<List<DocenteRoleData>> GetPagedListAsync(string? filter = null, int skipCount = 0, int maxResultCount = int.MaxValue, string sorting = null)
+        public async Task<List<DocenteRoleData>> GetPagedListAsync(string? filter = null, int skipCount = 0,
+            int maxResultCount = int.MaxValue, string sorting = null)
         {
             var query = AplyFilter(await GetQueryableAsync(), filter);
             query = string.IsNullOrEmpty(sorting) ? query : query.OrderBy(sorting);
             return await query.PageBy(skipCount, maxResultCount).ToListAsync();
+        }
+
+        public async Task<List<DocenteWithLookup>> GetAlreadyWithLot()
+        {
+            var dbContext = await this.GetDbContextAsync();
+            var queryable = from sorteo in dbContext.Sorteo
+                join docente in dbContext.Docentes on sorteo.DocenteId equals docente.Id
+                select new DocenteWithLookup()
+                {
+                    Id = docente.Id,
+                    Dni = docente.Dni,
+                    ApellidoMaterno = docente.ApellidoMaterno,
+                    ApellidoPaterno = docente.ApellidoPaterno,
+                    Nombre = docente.Nombre,
+                    FullName = docente.Nombre + " " + docente.ApellidoPaterno + " " + docente.ApellidoMaterno,
+                    Genero = docente.Genero,
+                    GradoId = docente.GradoId,
+                    Area = docente.Area,
+                    CreationTime = docente.CreationTime,
+                    CreatorId = docente.CreatorId,
+                    DeleterId = docente.DeleterId,
+                    DeletionTime = docente.DeletionTime,
+                    IsDeleted = docente.IsDeleted,
+                    LastModificationTime = docente.LastModificationTime,
+                    LastModifierId = docente.LastModifierId,
+                };
+            return await queryable.ToListAsync();
+        }
+
+        public async Task<List<DocenteWithLookup>> GetWithoutLot()
+        {
+            var dbContext = await this.GetDbContextAsync();
+            var queryable = from sorteo in dbContext.Sorteo
+                join docente in dbContext.Docentes on sorteo.DocenteId equals docente.Id
+                select new DocenteWithLookup()
+                {
+                    Id = docente.Id,
+                    Dni = docente.Dni,
+                    ApellidoMaterno = docente.ApellidoMaterno,
+                    ApellidoPaterno = docente.ApellidoPaterno,
+                    Nombre = docente.Nombre,
+                    FullName = docente.Nombre + " " + docente.ApellidoPaterno + " " + docente.ApellidoMaterno,
+                    Genero = docente.Genero,
+                    GradoId = docente.GradoId,
+                    Area = docente.Area,
+                    CreationTime = docente.CreationTime,
+                    CreatorId = docente.CreatorId,
+                    DeleterId = docente.DeleterId,
+                    DeletionTime = docente.DeletionTime,
+                    IsDeleted = docente.IsDeleted,
+                    LastModificationTime = docente.LastModificationTime,
+                    LastModifierId = docente.LastModifierId,
+                };
+            return await queryable.ToListAsync();
         }
 
         public async Task<long> GetCountAsync(string? filter = null)
@@ -34,7 +94,8 @@ namespace Washyn.UNAJ.Lot
             return await query.LongCountAsync();
         }
 
-        protected virtual IQueryable<DocenteRoleData> AplyFilter(IQueryable<DocenteRoleData> query, string? filter = null)
+        protected virtual IQueryable<DocenteRoleData> AplyFilter(IQueryable<DocenteRoleData> query,
+            string? filter = null)
         {
             return query.WhereIf(!string.IsNullOrEmpty(filter), a => a.FullName.ToLower().Contains(filter.ToLower()));
         }
@@ -43,32 +104,31 @@ namespace Washyn.UNAJ.Lot
         {
             var dbContext = await GetDbContextAsync();
             var queryable = from sorteo in dbContext.Sorteo
-                            join docente in dbContext.Docentes on sorteo.DocenteId equals docente.Id
-                            join rol in dbContext.Rols on sorteo.RolId equals rol.Id
-                            // join grado in dbContext.Grados on docente.Id equals grado.Id
-
-                            select new DocenteRoleData
-                            {
-                                Id = docente.Id,
-                                Dni = docente.Dni,
-                                ApellidoMaterno = docente.ApellidoMaterno,
-                                ApellidoPaterno = docente.ApellidoPaterno,
-                                Nombre = docente.Nombre,
-                                FullName = docente.Nombre + " " + docente.ApellidoPaterno + " " + docente.ApellidoMaterno,
-                                Genero = docente.Genero,
-                                GradoId = docente.GradoId,
-                                Area = docente.Area,
-                                CreationTime = docente.CreationTime,
-                                CreatorId = docente.CreatorId,
-                                DeleterId = docente.DeleterId,
-                                DeletionTime = docente.DeletionTime,
-                                IsDeleted = docente.IsDeleted,
-                                LastModificationTime = docente.LastModificationTime,
-                                LastModifierId = docente.LastModifierId,
-                                // GradoName = grado.Nombre,
-                                // GradoPrefix = grado.Prefix,
-                                RolName = rol.Nombre
-                            };
+                join docente in dbContext.Docentes on sorteo.DocenteId equals docente.Id
+                join rol in dbContext.Rols on sorteo.RolId equals rol.Id
+                // join grado in dbContext.Grados on docente.Id equals grado.Id
+                select new DocenteRoleData
+                {
+                    Id = docente.Id,
+                    Dni = docente.Dni,
+                    ApellidoMaterno = docente.ApellidoMaterno,
+                    ApellidoPaterno = docente.ApellidoPaterno,
+                    Nombre = docente.Nombre,
+                    FullName = docente.Nombre + " " + docente.ApellidoPaterno + " " + docente.ApellidoMaterno,
+                    Genero = docente.Genero,
+                    GradoId = docente.GradoId,
+                    Area = docente.Area,
+                    CreationTime = docente.CreationTime,
+                    CreatorId = docente.CreatorId,
+                    DeleterId = docente.DeleterId,
+                    DeletionTime = docente.DeletionTime,
+                    IsDeleted = docente.IsDeleted,
+                    LastModificationTime = docente.LastModificationTime,
+                    LastModifierId = docente.LastModifierId,
+                    // GradoName = grado.Nombre,
+                    // GradoPrefix = grado.Prefix,
+                    RolName = rol.Nombre
+                };
             return queryable;
         }
     }

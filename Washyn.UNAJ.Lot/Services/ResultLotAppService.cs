@@ -17,8 +17,25 @@ namespace Washyn.UNAJ.Lot.Services
             this.lotResultRepository = lotResultRepository;
         }
 
+        public async Task<List<DocenteWithLookup>> GetAlreadyWithLot()
+        {
+            return await lotResultRepository.GetAlreadyWithLot();
+        }
+
+        public async Task<List<DocenteWithLookup>> GetWithoutLot()
+        {
+            return await lotResultRepository.GetWithoutLot();
+        }
+
         public async Task CreateLotAsync(CreateLotResultDto create)
         {
+            // validar que el docente ya este sorteado para evitar que tenga 2 roles...
+            var docenteAlreadyExists = await lotResultRepository.AnyAsync(a => a.DocenteId == create.DocenteId);
+            if (docenteAlreadyExists)
+            {
+                throw new UserFriendlyException("El docente ya esta sorteado.");
+            }
+
             var exits = await lotResultRepository
                 .AnyAsync(a => a.DocenteId == create.DocenteId && a.RolId == create.RoleId);
 
@@ -37,7 +54,8 @@ namespace Washyn.UNAJ.Lot.Services
         public async Task<PagedResultDto<DocenteRoleData>> GetListAsync(ResultLotFilterDto input)
         {
             var totalCount = await lotResultRepository.GetCountAsync(input.Filter);
-            var data = await lotResultRepository.GetPagedListAsync(input.Filter, input.SkipCount, input.MaxResultCount, input.Sorting);
+            var data = await lotResultRepository.GetPagedListAsync(input.Filter, input.SkipCount, input.MaxResultCount,
+                input.Sorting);
             return new PagedResultDto<DocenteRoleData>(totalCount, data);
         }
     }
