@@ -39,7 +39,6 @@
 - Add http error interceptor por mientras...
 - Test...
 
-
 ### Sample code
 
 ```csharp
@@ -395,3 +394,14 @@ namespace Washyn.Billing.Web.PdfGen
 
 
 ```
+
+- Ejecucion los docentes, se sortean otros roles...
+- Otro rol otra seccion.
+- Consumo de api y para ejhecucuion, con otros role
+
+---
+
+# TODO:
+
+- Elaboracion
+- Ejecucuion pendiente
