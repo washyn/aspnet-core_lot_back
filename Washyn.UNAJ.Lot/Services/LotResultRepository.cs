@@ -61,13 +61,15 @@ namespace Washyn.UNAJ.Lot
             return await queryable.ToListAsync();
         }
 
-        // TODO: implementar, obtener todos los docentes pendientes de sorteo...
+
         public async Task<List<DocenteWithLookup>> GetWithoutLot()
         {
             var dbContext = await this.GetDbContextAsync();
-            var queryable = from sorteo in dbContext.Sorteo
-                join docente in dbContext.Docentes on sorteo.DocenteId equals docente.Id
-                select new DocenteWithLookup()
+            var query = from docente in dbContext.Docentes
+                join sorteo in dbContext.Sorteo on docente.Id equals sorteo.DocenteId into sorteoGroup
+                from sg in sorteoGroup.DefaultIfEmpty()
+                where sg == null
+                select new DocenteWithLookup
                 {
                     Id = docente.Id,
                     Dni = docente.Dni,
@@ -86,7 +88,9 @@ namespace Washyn.UNAJ.Lot
                     LastModificationTime = docente.LastModificationTime,
                     LastModifierId = docente.LastModifierId,
                 };
-            return await queryable.ToListAsync();
+
+            var resultList = await query.ToListAsync();
+            return resultList;
         }
 
         public async Task<long> GetCountAsync(string? filter = null)
