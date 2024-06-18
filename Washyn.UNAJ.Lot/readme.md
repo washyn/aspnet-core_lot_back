@@ -404,4 +404,5 @@ namespace Washyn.Billing.Web.PdfGen
 # TODO:
 
 - Elaboracion
-- Ejecucuion pendiente
+- Ejecucuion pendiente... credenciales.
+- Generar credenciales... con datos de prueba... que se genera...
