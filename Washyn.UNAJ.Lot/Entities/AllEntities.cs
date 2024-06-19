@@ -22,7 +22,11 @@ namespace Acme.BookStore.Entities
         public string Nombre { get; set; }
     }
 
-
+    public class Comision : Entity<Guid>
+    {
+        public string Nombre { get; set; }
+        // lista de docentes...
+    }
 
     public class Docente : FullAuditedEntity<Guid>
     {
