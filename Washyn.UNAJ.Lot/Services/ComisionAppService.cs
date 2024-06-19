@@ -23,6 +23,27 @@ public class ComisionAppService : CrudAppService<Comision, ComisionDto, Guid, Pa
     {
         return await _comisionRepository.GetAll();
     }
+
+    public async Task AssignToComision(List<AsignComisionDto> data)
+    {
+        // validate per element...
+    }
+
+    public async Task DeleteIntegrante(Guid integranteId, Guid comisionId)
+    {
+    }
+
+    public async Task<List<DocenteLookup>> GetDataByComisionAsync(Guid comisionId)
+    {
+        var data = await _comisionRepository.GetAll();
+        return data;
+    }
+}
+
+public class AsignComisionDto
+{
+    public Guid DocenteId { get; set; }
+    public Guid ComisionId { get; set; }
 }
 
 public class ComisionDto : EntityDto<Guid>
@@ -41,7 +62,7 @@ public interface IComisionRepository : IRepository<Comision, Guid>
     Task<List<DocenteLookup>> GetAll();
 }
 
-public class ComisionRepository : EfCoreRepository<LotDbContext,Comision, Guid>, IComisionRepository
+public class ComisionRepository : EfCoreRepository<LotDbContext, Comision, Guid>, IComisionRepository
 {
     public ComisionRepository(IDbContextProvider<LotDbContext> dbContextProvider) : base(dbContextProvider)
     {
@@ -51,15 +72,15 @@ public class ComisionRepository : EfCoreRepository<LotDbContext,Comision, Guid>,
     {
         var dbContext = await GetDbContextAsync();
         var queryable = from docente in dbContext.Docentes
-            select new DocenteLookup()
-            {
-                Id = docente.Id,
-                // Dni = docente.Dni,
-                // ApellidoMaterno = docente.ApellidoMaterno,
-                // ApellidoPaterno = docente.ApellidoPaterno,
-                // Nombre = docente.Nombre,
-                FullName = docente.Nombre + " " + docente.ApellidoPaterno + " " + docente.ApellidoMaterno,
-            };
+                        select new DocenteLookup()
+                        {
+                            Id = docente.Id,
+                            // Dni = docente.Dni,
+                            // ApellidoMaterno = docente.ApellidoMaterno,
+                            // ApellidoPaterno = docente.ApellidoPaterno,
+                            // Nombre = docente.Nombre,
+                            FullName = docente.Nombre + " " + docente.ApellidoPaterno + " " + docente.ApellidoMaterno,
+                        };
         return await queryable.ToListAsync();
     }
 }

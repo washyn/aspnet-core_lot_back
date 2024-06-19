@@ -409,3 +409,4 @@ namespace Washyn.Billing.Web.PdfGen
 - Tabla de comisiones...categoria superior a roles.
   - La comisiones se asigna
   - Asignacion de comisiones
+- Opcion de rechar el sorteo
