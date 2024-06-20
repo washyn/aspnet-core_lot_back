@@ -410,3 +410,4 @@ namespace Washyn.Billing.Web.PdfGen
   - La comisiones se asigna
   - Asignacion de comisiones
 - Opcion de rechar el sorteo
+- Agregar opcion de renombrar comisiones... en el front.
