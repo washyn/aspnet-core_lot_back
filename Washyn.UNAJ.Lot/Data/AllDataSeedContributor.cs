@@ -116,3 +116,46 @@ public class RoleDataSeedContributor : IDataSeedContributor, ITransientDependenc
         return await _repository.AnyAsync(a => a.Nombre == name);
     }
 }
+
+
+public class ComisionDataSeedContributor : IDataSeedContributor, ITransientDependency
+{
+    private readonly IRepository<Comision, Guid> _repository;
+
+    public ComisionDataSeedContributor(IRepository<Comision, Guid> repository)
+    {
+        _repository = repository;
+    }
+    
+    public async Task SeedAsync(DataSeedContext context)
+    {
+        var data = new List<Comision>()
+        {
+            new Comision()
+            {
+                Nombre = "COMISIÓN DE ELABORACIÓN",
+            },
+            new Comision()
+            {
+                Nombre = "COMISIÓN JURADO DE AULA"
+            },
+            // se puede agregar mas...
+        };
+        
+        foreach (var item in data)
+        {
+            if (!await Exists(item.Nombre))
+            {
+                await _repository.InsertAsync(new Comision()
+                {
+                    Nombre = item.Nombre,
+                });
+            }
+        }
+    }
+
+    private async Task<bool> Exists(string name)
+    {
+        return await _repository.AnyAsync(a => a.Nombre == name);
+    }
+}
