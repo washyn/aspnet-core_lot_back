@@ -16,5 +16,6 @@ namespace Washyn.UNAJ.Lot.Controllers
 
         public string FullName { get; set; }
         public string RolName { get; set; }
+        public string Comision { get; set; }
     }
 }

@@ -121,7 +121,8 @@ namespace Washyn.UNAJ.Lot
                     LastModifierId = docente.LastModifierId,
                     // GradoName = grado.Nombre,
                     // GradoPrefix = grado.Prefix,
-                    RolName = rol.Nombre
+                    RolName = rol.Nombre,
+                    Comision = "COMISIÓN DE ELABORACIÓN"
                 };
             return queryable;
         }

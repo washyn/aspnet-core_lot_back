@@ -27,6 +27,13 @@ namespace Washyn.UNAJ.Lot.Services
             return await lotResultRepository.GetWithoutLot();
         }
 
+        public async Task DeleteLotAsync(RemoveLotResultDto delete)
+        {
+            var element =
+                await lotResultRepository.GetAsync(a => a.DocenteId == delete.DocenteId && a.RolId == delete.RoleId);
+            await lotResultRepository.DeleteAsync(element);
+        }
+        
         public async Task CreateLotAsync(CreateLotResultDto create)
         {
             // validar que el docente ya este sorteado para evitar que tenga 2 roles...
@@ -71,6 +78,13 @@ namespace Washyn.UNAJ.Lot.Services
         public Guid RoleId { get; set; }
     }
 
+    public class RemoveLotResultDto
+    {
+        public Guid DocenteId { get; set; }
+        public Guid RoleId { get; set; }
+    }
+
+    
     public class ResultLotDto : FullAuditedEntityDto
     {
         public string DocenteFullName { get; set; }

@@ -134,7 +134,9 @@ namespace Washyn.UNAJ.Lot.Controllers
                                 x.Item().Text($"{docente.GradoPrefix} {docente.FullName}").AlignStart().Bold();
                                 x.Item().PaddingBottom(10).Text($"PRESENTE.-").AlignStart().Underline();
 
-                                x.Item().Text($"ASUNTO:  {options.Asunto}").Bold();
+
+                                var asuntoText = string.Format(options.Asunto, docente.Comision);
+                                x.Item().Text($"ASUNTO:  {asuntoText}").Bold();
                                 var text = @"De mi especial consideración;";
 
                                 x.Item().PaddingVertical(5).Text(text);
@@ -144,21 +146,23 @@ namespace Washyn.UNAJ.Lot.Controllers
 
                                     t.Span("Por medio del presesente documento me dirijo a su distinguida persona para expresarle un cordial saludo, asimismo informarle que este ");
                                     t.Span(options.FechaExamen).Bold().Underline();
-                                    t.Span(" ");
-                                    t.Span("se desarrollará el examen de admisión en su modalidad ");
+
+                                    t.Span(" se desarrollará el examen de admisión en su modalidad ");
                                     t.Span(options.Modalidad);
                                     t.Span(".");
                                 });
+
                                 x.Item().Text(t =>
                                 {
                                     t.Justify();
                                     t.Span("Por lo anterior, esta dirección le invita a participar en la ");
-                                    t.Span("COMISIÓN DE ELABORACIÓN").Bold();
+                                    t.Span(docente.Comision).Bold();
                                     t.Span(" en calidad de ");
                                     t.Span(docente.RolName.ToUpper());
                                     t.Span(
                                         " de examen en el proceso en mención; asismismo, poner de su conocimiento que debera realizar coordinaciones con el equipo de su comisión.");
                                 });
+
                                 x.Item().PaddingBottom(10).Text(t =>
                                 {
                                     t.Justify();
