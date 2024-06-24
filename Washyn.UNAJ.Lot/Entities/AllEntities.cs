@@ -20,12 +20,16 @@ namespace Acme.BookStore.Entities
     public class Rol : Entity<Guid>
     {
         public string Nombre { get; set; }
+        public Guid ComisionId { get; set; } // TODO: add relationship...
+        public Rol()
+        {
+        }
     }
 
     public class Comision : Entity<Guid>
     {
         public string Nombre { get; set; }
-        // lista de docentes...
+        public ICollection<Rol> Rols { get; set; }
     }
 
     public class Docente : FullAuditedEntity<Guid>
@@ -66,7 +70,7 @@ namespace Acme.BookStore.Entities
         public string FullName { get; set; }
     }
 
-    
+
     public class DocenteWithRolDto : EntityDto<Guid>
     {
         public string Dni { get; set; }
@@ -80,12 +84,12 @@ namespace Acme.BookStore.Entities
         public Area? Area { get; set; }
 
         public string FullName { get; set; }
-        
+
         public Guid? RolId { get; set; }
         public string? RolName { get; set; }
     }
-    
-    
+
+
     public class DocenteFilter : PagedAndSortedResultRequestDto
     {
         public string? Filter { get; set; }
