@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Acme.BookStore.Entities;
+using AutoMapper.Internal.Mappers;
 using Microsoft.EntityFrameworkCore;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
@@ -28,6 +29,13 @@ public class ComisionAppService : CrudAppService<Comision, ComisionDto, Guid, Pa
         return await _comisionRepository.GetAll();
     }
 
+    public async Task<ComisionWithRoles> GetWithDetails(Guid comisionId)
+    {
+        var temp = await _comisionRepository.GetAllWithRoles();
+        var comision = temp.First(a => a.Id == comisionId);
+        return ObjectMapper.Map<Comision, ComisionWithRoles>(comision);
+    }
+    
     // GetAllWithRoles
     public async Task<List<ComisionWithRoles>> GetAllWithDetails()
     {

@@ -414,3 +414,7 @@ namespace Washyn.Billing.Web.PdfGen
 # DONE:
 - Opcion de rechar el sorteo.
 - Agregar opcion de renombrar comisiones... en el front.
+
+
+## NOTA:
+- Para cada comision se tendra un diferente formato de informe, pero las comisiones estan definidas...
