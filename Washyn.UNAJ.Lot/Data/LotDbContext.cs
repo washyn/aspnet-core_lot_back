@@ -7,7 +7,6 @@ namespace Washyn.UNAJ.Lot.Data;
 
 public class LotDbContext : AbpDbContext<LotDbContext>
 {
-
     public DbSet<Comision> Comisions { get; set; }
     public DbSet<Curso> Cursos { get; set; }
     public DbSet<Grado> Grados { get; set; }

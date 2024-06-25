@@ -17,13 +17,24 @@ namespace Acme.BookStore.Entities
         public string Prefix { get; set; }
     }
 
-    public class Rol : Entity<Guid>
+    public class Rol : IEntity
     {
+        public Guid Id { get; set; }
         public string Nombre { get; set; }
-        public Guid ComisionId { get; set; } // TODO: add relationship...
+        public Guid ComisionId { get; set; }
         public Rol()
         {
         }
+        public object?[] GetKeys()
+        {
+            return new object?[] { Id, ComisionId };
+        }
+    }
+    
+    public class RolDto : IEntityDto
+    {
+        public Guid Id { get; set; }
+        public string Nombre { get; set; }
     }
 
     public class Comision : Entity<Guid>

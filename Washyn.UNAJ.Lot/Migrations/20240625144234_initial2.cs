@@ -12,6 +12,18 @@ namespace Washyn.UNAJ.Lot.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "Comisions",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Nombre = table.Column<string>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Comisions", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Cursos",
                 columns: table => new
                 {
@@ -50,28 +62,39 @@ namespace Washyn.UNAJ.Lot.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Sorteo",
+                columns: table => new
+                {
+                    DocenteId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    RolId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    DeletionTime = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "INTEGER", nullable: false, defaultValue: false),
+                    LastModificationTime = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    CreationTime = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    CreatorId = table.Column<Guid>(type: "TEXT", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Sorteo", x => new { x.RolId, x.DocenteId });
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Rols",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    Nombre = table.Column<string>(type: "TEXT", nullable: false)
+                    Nombre = table.Column<string>(type: "TEXT", nullable: false),
+                    ComisionId = table.Column<Guid>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Rols", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Sorteo",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    DocenteId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    RolId = table.Column<Guid>(type: "TEXT", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Sorteo", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Rols_Comisions_ComisionId",
+                        column: x => x.ComisionId,
+                        principalTable: "Comisions",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -79,11 +102,20 @@ namespace Washyn.UNAJ.Lot.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Dni = table.Column<string>(type: "TEXT", nullable: false),
                     Nombre = table.Column<string>(type: "TEXT", nullable: false),
                     ApellidoPaterno = table.Column<string>(type: "TEXT", nullable: false),
                     ApellidoMaterno = table.Column<string>(type: "TEXT", nullable: false),
                     Genero = table.Column<int>(type: "INTEGER", nullable: false),
-                    GradoId = table.Column<Guid>(type: "TEXT", nullable: false)
+                    GradoId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Area = table.Column<int>(type: "INTEGER", nullable: true),
+                    CreationTime = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    CreatorId = table.Column<Guid>(type: "TEXT", nullable: true),
+                    LastModificationTime = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    LastModifierId = table.Column<Guid>(type: "TEXT", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "INTEGER", nullable: false, defaultValue: false),
+                    DeleterId = table.Column<Guid>(type: "TEXT", nullable: true),
+                    DeletionTime = table.Column<DateTime>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -100,6 +132,11 @@ namespace Washyn.UNAJ.Lot.Migrations
                 name: "IX_Docentes_GradoId",
                 table: "Docentes",
                 column: "GradoId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Rols_ComisionId",
+                table: "Rols",
+                column: "ComisionId");
         }
 
         /// <inheritdoc />
@@ -122,6 +159,9 @@ namespace Washyn.UNAJ.Lot.Migrations
 
             migrationBuilder.DropTable(
                 name: "Grados");
+
+            migrationBuilder.DropTable(
+                name: "Comisions");
         }
     }
 }

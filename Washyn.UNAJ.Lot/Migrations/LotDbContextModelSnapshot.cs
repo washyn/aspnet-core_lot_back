@@ -20,6 +20,20 @@ namespace Washyn.UNAJ.Lot.Migrations
                 .HasAnnotation("_Abp_DatabaseProvider", EfCoreDatabaseProvider.Sqlite)
                 .HasAnnotation("ProductVersion", "8.0.0");
 
+            modelBuilder.Entity("Acme.BookStore.Entities.Comision", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Nombre")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Comisions");
+                });
+
             modelBuilder.Entity("Acme.BookStore.Entities.Curso", b =>
                 {
                     b.Property<Guid>("Id")
@@ -138,6 +152,10 @@ namespace Washyn.UNAJ.Lot.Migrations
             modelBuilder.Entity("Acme.BookStore.Entities.Rol", b =>
                 {
                     b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("ComisionId")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Nombre")
@@ -145,6 +163,8 @@ namespace Washyn.UNAJ.Lot.Migrations
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ComisionId");
 
                     b.ToTable("Rols");
                 });
@@ -193,6 +213,20 @@ namespace Washyn.UNAJ.Lot.Migrations
                         .IsRequired();
 
                     b.Navigation("Grado");
+                });
+
+            modelBuilder.Entity("Acme.BookStore.Entities.Rol", b =>
+                {
+                    b.HasOne("Acme.BookStore.Entities.Comision", null)
+                        .WithMany("Rols")
+                        .HasForeignKey("ComisionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Acme.BookStore.Entities.Comision", b =>
+                {
+                    b.Navigation("Rols");
                 });
 #pragma warning restore 612, 618
         }

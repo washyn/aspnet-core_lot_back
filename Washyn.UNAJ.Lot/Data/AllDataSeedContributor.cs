@@ -62,9 +62,9 @@ public class AllDataSeedContributor : IDataSeedContributor, ITransientDependency
 
 public class RoleDataSeedContributor : IDataSeedContributor, ITransientDependency
 {
-    private readonly IRepository<Rol, Guid> _repository;
+    private readonly IRepository<Rol> _repository;
 
-    public RoleDataSeedContributor(IRepository<Rol, Guid> repository)
+    public RoleDataSeedContributor(IRepository<Rol> repository)
     {
         _repository = repository;
     }
@@ -101,13 +101,13 @@ public class RoleDataSeedContributor : IDataSeedContributor, ITransientDependenc
         
         foreach (var item in data)
         {
-            if (!await Exists(item.Nombre))
-            {
-                await _repository.InsertAsync(new Rol()
-                {
-                    Nombre = item.Nombre,
-                });
-            }
+            // if (!await Exists(item.Nombre))
+            // {
+            //     await _repository.InsertAsync(new Rol()
+            //     {
+            //         Nombre = item.Nombre,
+            //     });
+            // }
         }
     }
 

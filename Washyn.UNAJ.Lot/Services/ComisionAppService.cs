@@ -13,15 +13,26 @@ namespace Washyn.UNAJ.Lot.Services;
 public class ComisionAppService : CrudAppService<Comision, ComisionDto, Guid, PagedAndSortedResultRequestDto>
 {
     private readonly IComisionRepository _comisionRepository;
+    private readonly IRepository<Rol> _rolRepository;
 
-    public ComisionAppService(IRepository<Comision, Guid> repository, IComisionRepository comisionRepository) : base(repository)
+    public ComisionAppService(IRepository<Comision, Guid> repository,
+        IComisionRepository comisionRepository,
+        IRepository<Rol> rolRepository) : base(repository)
     {
         _comisionRepository = comisionRepository;
+        _rolRepository = rolRepository;
     }
 
     public async Task<List<DocenteLookup>> GetDocente()
     {
         return await _comisionRepository.GetAll();
+    }
+
+    // GetAllWithRoles
+    public async Task<List<ComisionWithRoles>> GetAllWithDetails()
+    {
+        var temp = await _comisionRepository.GetAllWithRoles();
+        return ObjectMapper.Map<List<Comision>, List<ComisionWithRoles>>(temp);
     }
 
     public async Task AssignToComision(List<AsignComisionDto> data)
@@ -31,6 +42,16 @@ public class ComisionAppService : CrudAppService<Comision, ComisionDto, Guid, Pa
 
     public async Task DeleteIntegrante(Guid integranteId, Guid comisionId)
     {
+    }
+    
+    public async Task AddRol(AddRol model)
+    {
+        await _rolRepository.InsertAsync(new Rol()
+        {
+            Id = GuidGenerator.Create(),
+            ComisionId = model.ComisionId,
+            Nombre = model.Nombre
+        });
     }
 
     public async Task<List<DocenteLookup>> GetDataByComisionAsync(Guid comisionId)
@@ -46,10 +67,26 @@ public class AsignComisionDto
     public Guid ComisionId { get; set; }
 }
 
+
+public class AddRol : IEntityDto
+{
+    [Required]
+    public string Nombre { get; set; }
+    
+    [Required]
+    public Guid ComisionId { get; set; }
+}
+
 public class ComisionDto : EntityDto<Guid>
 {
     [Required]
     public string Nombre { get; set; }
+}
+
+public class ComisionWithRoles : EntityDto<Guid>
+{
+    public string Nombre { get; set; }
+    public List<RolDto> Rols { get; set; }
 }
 
 public class DocenteLookup : EntityDto<Guid>
@@ -60,6 +97,7 @@ public class DocenteLookup : EntityDto<Guid>
 public interface IComisionRepository : IRepository<Comision, Guid>
 {
     Task<List<DocenteLookup>> GetAll();
+    Task<List<Comision>> GetAllWithRoles();
 }
 
 public class ComisionRepository : EfCoreRepository<LotDbContext, Comision, Guid>, IComisionRepository
@@ -68,6 +106,8 @@ public class ComisionRepository : EfCoreRepository<LotDbContext, Comision, Guid>
     {
     }
 
+    // Get comision with roles ...
+    
     public async Task<List<DocenteLookup>> GetAll()
     {
         var dbContext = await GetDbContextAsync();
@@ -82,5 +122,13 @@ public class ComisionRepository : EfCoreRepository<LotDbContext, Comision, Guid>
                             FullName = docente.Nombre + " " + docente.ApellidoPaterno + " " + docente.ApellidoMaterno,
                         };
         return await queryable.ToListAsync();
+    }
+    
+    public async Task<List<Comision>> GetAllWithRoles()
+    {
+        var dbContext = await GetDbContextAsync();
+        var queryable = dbContext.Comisions.Include(a => a.Rols);
+        var tempRes = await queryable.ToListAsync();
+        return tempRes;
     }
 }

@@ -42,12 +42,12 @@ public class DocenteAppService : CrudAppService<Docente, DocenteDto, DocenteWith
 
 public class SelectAppService : ApplicationService
 {
-    private readonly IRepository<Rol, Guid> _rolRepository;
+    private readonly IRepository<Rol> _rolRepository;
     private readonly IRepository<Docente, Guid> _docenteRepository;
     private readonly IRepository<Curso, Guid> _cursoRepository;
     private readonly IRepository<Grado, Guid> _gradoRepository;
 
-    public SelectAppService(IRepository<Rol, Guid> rolRepository,
+    public SelectAppService(IRepository<Rol> rolRepository,
         IRepository<Docente, Guid> docenteRepository,
         IRepository<Curso, Guid> cursoRepository,
         IRepository<Grado, Guid> gradoRepository)

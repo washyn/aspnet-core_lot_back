@@ -9,8 +9,11 @@ public class LotAutoMapperProfile : Profile
     public LotAutoMapperProfile()
     {
         /* Create your AutoMapper object mappings here */
+
         CreateMap<DocenteDto, Docente>().ReverseMap();
         CreateMap<Docente, CreateUpdateDocenteDto>().ReverseMap();
         CreateMap<ComisionDto, Comision>().ReverseMap();
+        CreateMap<RolDto, Rol>().ReverseMap();
+        CreateMap<Comision, ComisionWithRoles>().ReverseMap();
     }
 }

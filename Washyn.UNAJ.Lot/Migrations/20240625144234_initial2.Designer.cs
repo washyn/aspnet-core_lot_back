@@ -12,8 +12,8 @@ using Washyn.UNAJ.Lot.Data;
 namespace Washyn.UNAJ.Lot.Migrations
 {
     [DbContext(typeof(LotDbContext))]
-    [Migration("20240612191522_adedDocumentId")]
-    partial class adedDocumentId
+    [Migration("20240625144234_initial2")]
+    partial class initial2
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -22,6 +22,20 @@ namespace Washyn.UNAJ.Lot.Migrations
             modelBuilder
                 .HasAnnotation("_Abp_DatabaseProvider", EfCoreDatabaseProvider.Sqlite)
                 .HasAnnotation("ProductVersion", "8.0.0");
+
+            modelBuilder.Entity("Acme.BookStore.Entities.Comision", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Nombre")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Comisions");
+                });
 
             modelBuilder.Entity("Acme.BookStore.Entities.Curso", b =>
                 {
@@ -141,6 +155,10 @@ namespace Washyn.UNAJ.Lot.Migrations
             modelBuilder.Entity("Acme.BookStore.Entities.Rol", b =>
                 {
                     b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("ComisionId")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Nombre")
@@ -149,12 +167,17 @@ namespace Washyn.UNAJ.Lot.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ComisionId");
+
                     b.ToTable("Rols");
                 });
 
             modelBuilder.Entity("Acme.BookStore.Entities.Sorteo", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<Guid>("RolId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("DocenteId")
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("CreationTime")
@@ -165,16 +188,9 @@ namespace Washyn.UNAJ.Lot.Migrations
                         .HasColumnType("TEXT")
                         .HasColumnName("CreatorId");
 
-                    b.Property<Guid?>("DeleterId")
-                        .HasColumnType("TEXT")
-                        .HasColumnName("DeleterId");
-
                     b.Property<DateTime?>("DeletionTime")
                         .HasColumnType("TEXT")
                         .HasColumnName("DeletionTime");
-
-                    b.Property<Guid>("DocenteId")
-                        .HasColumnType("TEXT");
 
                     b.Property<bool>("IsDeleted")
                         .ValueGeneratedOnAdd()
@@ -186,14 +202,7 @@ namespace Washyn.UNAJ.Lot.Migrations
                         .HasColumnType("TEXT")
                         .HasColumnName("LastModificationTime");
 
-                    b.Property<Guid?>("LastModifierId")
-                        .HasColumnType("TEXT")
-                        .HasColumnName("LastModifierId");
-
-                    b.Property<Guid>("RolId")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
+                    b.HasKey("RolId", "DocenteId");
 
                     b.ToTable("Sorteo");
                 });
@@ -207,6 +216,20 @@ namespace Washyn.UNAJ.Lot.Migrations
                         .IsRequired();
 
                     b.Navigation("Grado");
+                });
+
+            modelBuilder.Entity("Acme.BookStore.Entities.Rol", b =>
+                {
+                    b.HasOne("Acme.BookStore.Entities.Comision", null)
+                        .WithMany("Rols")
+                        .HasForeignKey("ComisionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Acme.BookStore.Entities.Comision", b =>
+                {
+                    b.Navigation("Rols");
                 });
 #pragma warning restore 612, 618
         }

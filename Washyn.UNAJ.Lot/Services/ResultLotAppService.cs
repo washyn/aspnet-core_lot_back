@@ -27,10 +27,16 @@ namespace Washyn.UNAJ.Lot.Services
             return await lotResultRepository.GetWithoutLot();
         }
 
-        public async Task DeleteLotAsync(RemoveLotResultDto delete)
+        public async Task DeleteByDocenteIdAsync(Guid docenteId)
+        {
+            var element = await lotResultRepository.GetAsync(a => a.DocenteId == docenteId);
+            await lotResultRepository.DeleteAsync(element);
+        }
+
+        public async Task DeleteLotAsync(RemoveLotResultDto model)
         {
             var element =
-                await lotResultRepository.GetAsync(a => a.DocenteId == delete.DocenteId && a.RolId == delete.RoleId);
+                await lotResultRepository.GetAsync(a => a.DocenteId == model.DocenteId && a.RolId == model.RoleId);
             await lotResultRepository.DeleteAsync(element);
         }
         
