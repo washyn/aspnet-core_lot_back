@@ -30,7 +30,7 @@ namespace Acme.BookStore.Entities
             return new object?[] { Id, ComisionId };
         }
     }
-    
+
     public class RolDto : IEntityDto
     {
         public Guid Id { get; set; }
@@ -142,10 +142,16 @@ namespace Acme.BookStore.Entities
         // public override DateTime? LastModificationTime { get => base.LastModificationTime; set => base.LastModificationTime = value; }
     }
 
-    public class Participante : Entity<Guid>
+    // public Guid CursoId { get; set; }
+    public class Participante : IEntity
     {
         public Guid DocenteId { get; set; }
-        public Guid CursoId { get; set; }
+        public Guid ComisionId { get; set; }
+
+        public object?[] GetKeys()
+        {
+            return new object[] { DocenteId, ComisionId };
+        }
     }
 
     public enum Gender
