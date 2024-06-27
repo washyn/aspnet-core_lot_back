@@ -142,6 +142,17 @@ namespace Acme.BookStore.Entities
         // public override DateTime? LastModificationTime { get => base.LastModificationTime; set => base.LastModificationTime = value; }
     }
 
+
+    public class AppSettings : IEntity
+    {
+        public string Key { get; set; }
+        public string Value { get; set; }
+        public object?[] GetKeys()
+        {
+            return new object[] { Key };
+        }
+    }
+
     // public Guid CursoId { get; set; }
     public class Participante : IEntity
     {
