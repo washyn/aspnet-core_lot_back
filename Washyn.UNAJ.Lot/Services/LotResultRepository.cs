@@ -38,22 +38,22 @@ namespace Washyn.UNAJ.Lot
         {
             var dbContext = await this.GetDbContextAsync();
             var queryable = from sorteo in dbContext.Sorteo
-                join docente in dbContext.Docentes on sorteo.DocenteId equals docente.Id
-                join rol in dbContext.Rols on sorteo.RolId equals rol.Id
-                select new DocenteWithRolDto()
-                {
-                    Id = docente.Id,
-                    Dni = docente.Dni,
-                    ApellidoMaterno = docente.ApellidoMaterno,
-                    ApellidoPaterno = docente.ApellidoPaterno,
-                    Nombre = docente.Nombre,
-                    FullName = docente.Nombre + " " + docente.ApellidoPaterno + " " + docente.ApellidoMaterno,
-                    Genero = docente.Genero,
-                    GradoId = docente.GradoId,
-                    Area = docente.Area,
-                    RolId = rol.Id,
-                    RolName = rol.Nombre
-                };
+                            join docente in dbContext.Docentes on sorteo.DocenteId equals docente.Id
+                            join rol in dbContext.Rols on sorteo.RolId equals rol.Id
+                            select new DocenteWithRolDto()
+                            {
+                                Id = docente.Id,
+                                Dni = docente.Dni,
+                                ApellidoMaterno = docente.ApellidoMaterno,
+                                ApellidoPaterno = docente.ApellidoPaterno,
+                                Nombre = docente.Nombre,
+                                FullName = docente.Nombre + " " + docente.ApellidoPaterno + " " + docente.ApellidoMaterno,
+                                Genero = docente.Genero,
+                                GradoId = docente.GradoId,
+                                Area = docente.Area,
+                                RolId = rol.Id,
+                                RolName = rol.Nombre
+                            };
             return await queryable.ToListAsync();
         }
 
@@ -62,21 +62,21 @@ namespace Washyn.UNAJ.Lot
         {
             var dbContext = await this.GetDbContextAsync();
             var query = from docente in dbContext.Docentes
-                join sorteo in dbContext.Sorteo on docente.Id equals sorteo.DocenteId into sorteoGroup
-                from sg in sorteoGroup.DefaultIfEmpty()
-                where sg == null
-                select new DocenteWithRolDto
-                {
-                    Id = docente.Id,
-                    Dni = docente.Dni,
-                    ApellidoMaterno = docente.ApellidoMaterno,
-                    ApellidoPaterno = docente.ApellidoPaterno,
-                    Nombre = docente.Nombre,
-                    FullName = docente.Nombre + " " + docente.ApellidoPaterno + " " + docente.ApellidoMaterno,
-                    Genero = docente.Genero,
-                    GradoId = docente.GradoId,
-                    Area = docente.Area,
-                };
+                        join sorteo in dbContext.Sorteo on docente.Id equals sorteo.DocenteId into sorteoGroup
+                        from sg in sorteoGroup.DefaultIfEmpty()
+                        where sg == null
+                        select new DocenteWithRolDto
+                        {
+                            Id = docente.Id,
+                            Dni = docente.Dni,
+                            ApellidoMaterno = docente.ApellidoMaterno,
+                            ApellidoPaterno = docente.ApellidoPaterno,
+                            Nombre = docente.Nombre,
+                            FullName = docente.Nombre + " " + docente.ApellidoPaterno + " " + docente.ApellidoMaterno,
+                            Genero = docente.Genero,
+                            GradoId = docente.GradoId,
+                            Area = docente.Area,
+                        };
 
             var resultList = await query.ToListAsync();
             return resultList;
@@ -98,32 +98,32 @@ namespace Washyn.UNAJ.Lot
         {
             var dbContext = await GetDbContextAsync();
             var queryable = from sorteo in dbContext.Sorteo
-                join docente in dbContext.Docentes on sorteo.DocenteId equals docente.Id
-                join rol in dbContext.Rols on sorteo.RolId equals rol.Id
-                // join grado in dbContext.Grados on docente.Id equals grado.Id
-                select new DocenteRoleData
-                {
-                    Id = docente.Id,
-                    Dni = docente.Dni,
-                    ApellidoMaterno = docente.ApellidoMaterno,
-                    ApellidoPaterno = docente.ApellidoPaterno,
-                    Nombre = docente.Nombre,
-                    FullName = docente.Nombre + " " + docente.ApellidoPaterno + " " + docente.ApellidoMaterno,
-                    Genero = docente.Genero,
-                    GradoId = docente.GradoId,
-                    Area = docente.Area,
-                    CreationTime = docente.CreationTime,
-                    CreatorId = docente.CreatorId,
-                    DeleterId = docente.DeleterId,
-                    DeletionTime = docente.DeletionTime,
-                    IsDeleted = docente.IsDeleted,
-                    LastModificationTime = docente.LastModificationTime,
-                    LastModifierId = docente.LastModifierId,
-                    // GradoName = grado.Nombre,
-                    // GradoPrefix = grado.Prefix,
-                    RolName = rol.Nombre,
-                    Comision = "COMISIÓN DE ELABORACIÓN"
-                };
+                            join docente in dbContext.Docentes on sorteo.DocenteId equals docente.Id
+                            join rol in dbContext.Rols on sorteo.RolId equals rol.Id
+                            // join grado in dbContext.Grados on docente.Id equals grado.Id
+                            select new DocenteRoleData
+                            {
+                                Id = docente.Id,
+                                Dni = docente.Dni,
+                                ApellidoMaterno = docente.ApellidoMaterno,
+                                ApellidoPaterno = docente.ApellidoPaterno,
+                                Nombre = docente.Nombre,
+                                FullName = docente.Nombre + " " + docente.ApellidoPaterno + " " + docente.ApellidoMaterno,
+                                Genero = docente.Genero,
+                                GradoId = docente.GradoId,
+                                Area = docente.Area,
+                                CreationTime = docente.CreationTime,
+                                CreatorId = docente.CreatorId,
+                                DeleterId = docente.DeleterId,
+                                DeletionTime = docente.DeletionTime,
+                                IsDeleted = docente.IsDeleted,
+                                LastModificationTime = docente.LastModificationTime,
+                                LastModifierId = docente.LastModifierId,
+                                // GradoName = grado.Nombre,
+                                // GradoPrefix = grado.Prefix,
+                                RolName = rol.Nombre,
+                                Comision = "COMISIÓN DE ELABORACIÓN"
+                            };
             return queryable;
         }
     }
