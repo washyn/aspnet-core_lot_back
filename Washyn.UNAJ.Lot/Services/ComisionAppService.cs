@@ -91,7 +91,7 @@ public class ComisionAppService : CrudAppService<Comision, ComisionDto, Guid, Pa
         foreach (var item in docente)
         {
             var element = await participanteRepository
-                .GetAsync(a => a.ComisionId == comisionId && a.DocenteId == item);
+                .FindAsync(a => a.ComisionId == comisionId && a.DocenteId == item);
 
             if (element is null)
             {
@@ -110,7 +110,7 @@ public class ComisionAppService : CrudAppService<Comision, ComisionDto, Guid, Pa
         foreach (var item in docente)
         {
             var element = await participanteRepository
-                .GetAsync(a => a.ComisionId == comisionId && a.DocenteId == item);
+                .FindAsync(a => a.ComisionId == comisionId && a.DocenteId == item);
 
             if (element is not null)
             {
