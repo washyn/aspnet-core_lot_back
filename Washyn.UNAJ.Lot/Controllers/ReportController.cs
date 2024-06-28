@@ -104,8 +104,8 @@ namespace Washyn.UNAJ.Lot.Controllers
                                         .DefaultTextStyle(a => a.FontFamily("Arial"))
                                         .Column(a =>
                                         {
-                                            a.Item().Text("UNIVERSIDAD  NACIONAL  DE JULIACA").AlignCenter().FontColor(Colors.Grey.Darken4);
-                                            a.Item().Text("CREADA  POR  LEY  N\u00b0  29074").AlignCenter().Italic().FontColor(Colors.Grey.Darken3);
+                                            a.Item().Text("UNIVERSIDAD  NACIONAL  DE JULIACA").AlignCenter().FontColor(Colors.Grey.Darken1);
+                                            a.Item().Text("CREADA  POR  LEY  N\u00b0  29074").AlignCenter().Italic().FontColor(Colors.Grey.Darken1);
                                             a.Item().Text("DIRECCIÓN DE ADMISIÓN").AlignCenter().FontColor(Colors.Grey.Darken1);
                                         });
                                     row.RelativeItem(2)
@@ -124,7 +124,8 @@ namespace Washyn.UNAJ.Lot.Controllers
                                     .Text(options.YearName)
                                     .FontSize(10)
                                     .AlignCenter()
-                                    .Italic();
+                                    .Italic()
+                                    .FontColor(Colors.Grey.Lighten1);
 
                                 x.Item().PaddingVertical(10).Text($"{options.FechaGenerada}").AlignEnd();
 
