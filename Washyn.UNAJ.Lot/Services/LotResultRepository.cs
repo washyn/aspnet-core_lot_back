@@ -16,8 +16,8 @@ namespace Washyn.UNAJ.Lot
         Task<List<DocenteRoleData>> GetPagedListAsync(string? filter = null, int skipCount = 0,
             int maxResultCount = int.MaxValue, string sorting = null);
 
-        Task<List<DocenteWithRolDto>> GetWithoutLot();
-        Task<List<DocenteWithRolDto>> GetAlreadyWithLot();
+        Task<List<DocenteWithRolDto>> GetWithoutLot(Guid comisionId);
+        Task<List<DocenteWithRolDto>> GetAlreadyWithLot(Guid comisionId);
     }
 
     public class LotResultRepository : EfCoreRepository<LotDbContext, Sorteo>, ILotResultRepository
@@ -35,15 +35,18 @@ namespace Washyn.UNAJ.Lot
             return await query.PageBy(skipCount, maxResultCount).ToListAsync();
         }
 
-        public async Task<List<DocenteWithRolDto>> GetAlreadyWithLot()
+        public async Task<List<DocenteWithRolDto>> GetAlreadyWithLot(Guid comisionId)
         {
             // TODO: change this query,
             // participantes de comision una comision que ya tengan un rol aun asignado
-            // ... 
+            // ...
+            // ... ... 
+            
             var dbContext = await this.GetDbContextAsync();
             var queryable = from sorteo in dbContext.Sorteo
                             join docente in dbContext.Docentes on sorteo.DocenteId equals docente.Id
                             join rol in dbContext.Rols on sorteo.RolId equals rol.Id
+                            where rol.ComisionId == comisionId
                             select new DocenteWithRolDto()
                             {
                                 Id = docente.Id,
@@ -64,10 +67,12 @@ namespace Washyn.UNAJ.Lot
 
         
         
-        public async Task<List<DocenteWithRolDto>> GetWithoutLot()
+        public async Task<List<DocenteWithRolDto>> GetWithoutLot(Guid comisionId)
         {
             // TODO: change this query
             // participantes de comision una comision que no tengan un rol aun asignado
+            
+            // 
             var dbContext = await this.GetDbContextAsync();
             var query = from docente in dbContext.Docentes
                         join sorteo in dbContext.Sorteo on docente.Id equals sorteo.DocenteId into sorteoGroup

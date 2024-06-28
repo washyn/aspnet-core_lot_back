@@ -17,14 +17,14 @@ namespace Washyn.UNAJ.Lot.Services
             this.lotResultRepository = lotResultRepository;
         }
 
-        public async Task<List<DocenteWithRolDto>> GetAlreadyWithLot()
+        public async Task<List<DocenteWithRolDto>> GetAlreadyWithLot(Guid comisionId)
         {
-            return await lotResultRepository.GetAlreadyWithLot();
+            return await lotResultRepository.GetAlreadyWithLot(comisionId);
         }
 
-        public async Task<List<DocenteWithRolDto>> GetWithoutLot()
+        public async Task<List<DocenteWithRolDto>> GetWithoutLot(Guid comisionId)
         {
-            return await lotResultRepository.GetWithoutLot();
+            return await lotResultRepository.GetWithoutLot(comisionId);
         }
 
         public async Task DeleteByDocenteIdAsync(Guid docenteId)
