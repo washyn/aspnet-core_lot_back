@@ -132,20 +132,18 @@ namespace Acme.BookStore.Entities
         public DateTime? LastModificationTime { get; set; }
         public DateTime CreationTime { get; set; }
         public Guid? CreatorId { get; set; }
-
-        // public override Guid? CreatorId { get => base.CreatorId; protected set => base.CreatorId = value; }
-        // public override DateTime CreationTime { get => base.CreationTime; protected set => base.CreationTime = value; }
-        // public override Guid? DeleterId { get => base.DeleterId; set => base.DeleterId = value; }
-        // public override DateTime? DeletionTime { get => base.DeletionTime; set => base.DeletionTime = value; }
-        // public override Guid? LastModifierId { get => base.LastModifierId; set => base.LastModifierId = value; }
-        // public override bool IsDeleted { get => base.IsDeleted; set => base.IsDeleted = value; }
-        // public override DateTime? LastModificationTime { get => base.LastModificationTime; set => base.LastModificationTime = value; }
     }
-
-    public class Participante : Entity<Guid>
+    
+    // comision con participantes ...
+    
+    public class Participante : IEntity
     {
         public Guid DocenteId { get; set; }
-        public Guid CursoId { get; set; }
+        public Guid ComisionId { get; set; }
+        public object?[] GetKeys()
+        {
+            return new object?[] { DocenteId, ComisionId };
+        }
     }
 
     public enum Gender
