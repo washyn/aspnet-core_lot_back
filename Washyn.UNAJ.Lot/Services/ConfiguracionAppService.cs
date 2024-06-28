@@ -25,6 +25,8 @@ namespace Washyn.UNAJ.Lot.Services
             Options = options.Value;
         }
 
+        // TODO: los participantes se van de un grupo a otro, creo que es cuando se elimina o cuando se establece ...
+
         // add set
         // try add config module in database...
         public async Task CreateConfig(DocumentOptions documentOptions)
