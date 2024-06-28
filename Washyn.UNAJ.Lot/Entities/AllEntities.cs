@@ -30,7 +30,7 @@ namespace Acme.BookStore.Entities
             return new object?[] { Id, ComisionId };
         }
     }
-    
+
     public class RolDto : IEntityDto
     {
         public Guid Id { get; set; }
@@ -133,13 +133,22 @@ namespace Acme.BookStore.Entities
         public DateTime CreationTime { get; set; }
         public Guid? CreatorId { get; set; }
     }
-    
-    // comision con participantes ...
-    
+
+    public class AppSettings : IEntity
+    {
+        public string Key { get; set; }
+        public string Value { get; set; }
+        public object?[] GetKeys()
+        {
+            return new object[] { Key };
+        }
+    }
+
     public class Participante : IEntity
     {
         public Guid DocenteId { get; set; }
         public Guid ComisionId { get; set; }
+
         public object?[] GetKeys()
         {
             return new object?[] { DocenteId, ComisionId };

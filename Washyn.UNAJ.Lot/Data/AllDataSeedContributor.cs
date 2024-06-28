@@ -1,9 +1,60 @@
 ﻿using Acme.BookStore.Entities;
+using Microsoft.Extensions.Options;
 using Volo.Abp.Data;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.Domain.Repositories;
+using Volo.Abp.Json;
+using Washyn.UNAJ.Lot.Models;
+using Washyn.UNAJ.Lot.Services;
 
 namespace Washyn.UNAJ.Lot.Data;
+
+public class AppSettingContributor : IDataSeedContributor, ITransientDependency
+{
+    public AppSettingContributor(IRepository<AppSettings> repository,
+        IJsonSerializer jsonSerializer,
+        IOptionsSnapshot<DocumentOptions> optionsSnapshot)
+    {
+        Repository = repository;
+        JsonSerializer = jsonSerializer;
+        OptionsSnapshot = optionsSnapshot.Value;
+    }
+
+    public IRepository<AppSettings> Repository { get; }
+    public IJsonSerializer JsonSerializer { get; }
+    public DocumentOptions OptionsSnapshot { get; }
+
+    public async Task SeedAsync(DataSeedContext context)
+    {
+        var stringConfig = JsonSerializer.Serialize(OptionsSnapshot);
+        var data = new List<AppSettings>()
+        {
+            new AppSettings()
+            {
+                Key = ConfiguracionConts.GENERAL_OPTIONS,
+                Value = stringConfig
+            },
+        };
+
+        foreach (var item in data)
+        {
+            if (!await Exists(item.Key))
+            {
+                await Repository.InsertAsync(new AppSettings()
+                {
+                    Key = item.Key,
+                    Value = item.Value
+                });
+            }
+        }
+    }
+
+    private async Task<bool> Exists(string name)
+    {
+        return await Repository.AnyAsync(a => a.Key == name);
+    }
+}
+
 
 public class AllDataSeedContributor : IDataSeedContributor, ITransientDependency
 {
@@ -13,7 +64,7 @@ public class AllDataSeedContributor : IDataSeedContributor, ITransientDependency
     {
         _gradoRepository = gradoRepository;
     }
-    
+
     public async Task SeedAsync(DataSeedContext context)
     {
         var data = new List<Grado>()
@@ -39,7 +90,7 @@ public class AllDataSeedContributor : IDataSeedContributor, ITransientDependency
                 Prefix = "Lic."
             }
         };
-        
+
         foreach (var item in data)
         {
             if (!await Exists(item.Nombre))
@@ -51,7 +102,7 @@ public class AllDataSeedContributor : IDataSeedContributor, ITransientDependency
                 });
             }
         }
-        
+
     }
 
     private async Task<bool> Exists(string name)
@@ -98,7 +149,7 @@ public class RoleDataSeedContributor : IDataSeedContributor, ITransientDependenc
             },
             // se puede agregar mas... 
         };
-        
+
         foreach (var item in data)
         {
             // if (!await Exists(item.Nombre))
@@ -126,7 +177,7 @@ public class ComisionDataSeedContributor : IDataSeedContributor, ITransientDepen
     {
         _repository = repository;
     }
-    
+
     public async Task SeedAsync(DataSeedContext context)
     {
         var data = new List<Comision>()
@@ -141,7 +192,7 @@ public class ComisionDataSeedContributor : IDataSeedContributor, ITransientDepen
             },
             // se puede agregar mas...
         };
-        
+
         foreach (var item in data)
         {
             if (!await Exists(item.Nombre))
