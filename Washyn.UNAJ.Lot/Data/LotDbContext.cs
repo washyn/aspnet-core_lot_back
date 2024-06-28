@@ -19,7 +19,7 @@ public class LotDbContext : AbpDbContext<LotDbContext>
     public LotDbContext(DbContextOptions<LotDbContext> options) : base(options)
     {
     }
-    
+
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
@@ -42,7 +42,7 @@ public class LotDbContext : AbpDbContext<LotDbContext>
         builder.Entity<Sorteo>(b =>
         {
             b.ConfigureByConvention();
-            b.HasKey(c => new { c.DocenteId, c.RolId });
+            b.HasKey(c => new { c.DocenteId, c.RolId, c.ComisionId });
         });
     }
 }

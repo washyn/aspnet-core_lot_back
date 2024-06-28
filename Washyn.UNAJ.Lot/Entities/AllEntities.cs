@@ -121,10 +121,11 @@ namespace Acme.BookStore.Entities
     {
         public Guid DocenteId { get; set; }
         public Guid RolId { get; set; }
+        public Guid ComisionId { get; set; }
 
         public object?[] GetKeys()
         {
-            return new object[] { DocenteId, RolId };
+            return new object[] { DocenteId, RolId, ComisionId };
         }
 
         public DateTime? DeletionTime { get; set; }
@@ -148,7 +149,6 @@ namespace Acme.BookStore.Entities
     {
         public Guid DocenteId { get; set; }
         public Guid ComisionId { get; set; }
-
         public object?[] GetKeys()
         {
             return new object?[] { DocenteId, ComisionId };

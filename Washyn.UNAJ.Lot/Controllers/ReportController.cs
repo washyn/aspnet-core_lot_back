@@ -30,7 +30,7 @@ namespace Washyn.UNAJ.Lot.Controllers
             this.lotResultRepository = lotResultRepository;
         }
 
-        // lanzar todos los tipos de errores... de abp
+        // TODO: test lanzar todos los tipos de errores... de abp
         [HttpGet]
         [Route("error-frieldy-sample")]
         public async Task SampleErrorFriendly()
@@ -104,9 +104,9 @@ namespace Washyn.UNAJ.Lot.Controllers
                                         .DefaultTextStyle(a => a.FontFamily("Arial"))
                                         .Column(a =>
                                         {
-                                            a.Item().Text("UNIVERSIDAD  NACIONAL  DE JULIACA").AlignCenter();
-                                            a.Item().Text("CREADA  POR  LEY  N\u00b0  29074").AlignCenter().Italic();
-                                            a.Item().Text("DIRECCIÓN DE ADMISIÓN").AlignCenter();
+                                            a.Item().Text("UNIVERSIDAD  NACIONAL  DE JULIACA").AlignCenter().FontColor(Colors.Grey.Darken4);
+                                            a.Item().Text("CREADA  POR  LEY  N\u00b0  29074").AlignCenter().Italic().FontColor(Colors.Grey.Darken3);
+                                            a.Item().Text("DIRECCIÓN DE ADMISIÓN").AlignCenter().FontColor(Colors.Grey.Darken1);
                                         });
                                     row.RelativeItem(2)
                                         .Width(75)
@@ -185,8 +185,6 @@ namespace Washyn.UNAJ.Lot.Controllers
                                     .FontSize(10);
                             });
                     });
-
-
                 }
             });
 

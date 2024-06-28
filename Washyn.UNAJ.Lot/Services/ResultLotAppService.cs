@@ -1,8 +1,8 @@
+using System.ComponentModel.DataAnnotations;
 using Acme.BookStore.Entities;
 using Volo.Abp;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
-using Volo.Abp.Domain.Entities.Auditing;
 using Volo.Abp.Domain.Repositories;
 using Washyn.UNAJ.Lot.Controllers;
 
@@ -39,18 +39,22 @@ namespace Washyn.UNAJ.Lot.Services
                 await lotResultRepository.GetAsync(a => a.DocenteId == model.DocenteId && a.RolId == model.RoleId);
             await lotResultRepository.DeleteAsync(element);
         }
-        
+
         public async Task CreateLotAsync(CreateLotResultDto create)
         {
             // validar que el docente ya este sorteado para evitar que tenga 2 roles...
-            var docenteAlreadyExists = await lotResultRepository.AnyAsync(a => a.DocenteId == create.DocenteId);
+            var docenteAlreadyExists = await lotResultRepository
+                .AnyAsync(a => a.DocenteId == create.DocenteId
+                && a.ComisionId == create.ComisionId);
             if (docenteAlreadyExists)
             {
-                throw new UserFriendlyException("El docente ya esta sorteado.");
+                throw new UserFriendlyException("El docente ya esta sorteado en esta comision.");
             }
 
             var exits = await lotResultRepository
-                .AnyAsync(a => a.DocenteId == create.DocenteId && a.RolId == create.RoleId);
+                .AnyAsync(a => a.DocenteId == create.DocenteId
+                    && a.RolId == create.RoleId
+                    && a.ComisionId == create.ComisionId);
 
             if (exits)
             {
@@ -60,7 +64,8 @@ namespace Washyn.UNAJ.Lot.Services
             await lotResultRepository.InsertAsync(new Sorteo
             {
                 RolId = create.RoleId,
-                DocenteId = create.DocenteId
+                DocenteId = create.DocenteId,
+                ComisionId = create.ComisionId,
             });
         }
 
@@ -80,17 +85,24 @@ namespace Washyn.UNAJ.Lot.Services
 
     public class CreateLotResultDto
     {
+        [Required]
         public Guid DocenteId { get; set; }
+
+        [Required]
         public Guid RoleId { get; set; }
+
+        [Required]
+        public Guid ComisionId { get; set; }
     }
 
     public class RemoveLotResultDto
     {
         public Guid DocenteId { get; set; }
         public Guid RoleId { get; set; }
+        public Guid ComisionId { get; set; }
     }
 
-    
+
     public class ResultLotDto : FullAuditedEntityDto
     {
         public string DocenteFullName { get; set; }

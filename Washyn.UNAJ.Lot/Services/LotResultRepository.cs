@@ -11,11 +11,10 @@ namespace Washyn.UNAJ.Lot
 {
     public interface ILotResultRepository : IRepository<Sorteo>
     {
-        Task<long> GetCountAsync(string? filter = null);
-
         Task<List<DocenteRoleData>> GetPagedListAsync(string? filter = null, int skipCount = 0,
             int maxResultCount = int.MaxValue, string sorting = null);
 
+        Task<long> GetCountAsync(string? filter = null);
         Task<List<DocenteWithRolDto>> GetWithoutLot(Guid comisionId);
         Task<List<DocenteWithRolDto>> GetAlreadyWithLot(Guid comisionId);
     }
@@ -35,18 +34,14 @@ namespace Washyn.UNAJ.Lot
             return await query.PageBy(skipCount, maxResultCount).ToListAsync();
         }
 
+        // TODO: change this query
         public async Task<List<DocenteWithRolDto>> GetAlreadyWithLot(Guid comisionId)
         {
-            // TODO: change this query,
-            // participantes de comision una comision que ya tengan un rol aun asignado
-            // ...
-            // ... ... 
-            
             var dbContext = await this.GetDbContextAsync();
             var queryable = from sorteo in dbContext.Sorteo
                             join docente in dbContext.Docentes on sorteo.DocenteId equals docente.Id
                             join rol in dbContext.Rols on sorteo.RolId equals rol.Id
-                            where rol.ComisionId == comisionId
+                            where sorteo.ComisionId == comisionId
                             select new DocenteWithRolDto()
                             {
                                 Id = docente.Id,
@@ -64,20 +59,13 @@ namespace Washyn.UNAJ.Lot
             return await queryable.ToListAsync();
         }
 
-
-        
-        
         public async Task<List<DocenteWithRolDto>> GetWithoutLot(Guid comisionId)
         {
-            // TODO: change this query
-            // participantes de comision una comision que no tengan un rol aun asignado
-            
-            // 
             var dbContext = await this.GetDbContextAsync();
-            var query = from docente in dbContext.Docentes
-                        join sorteo in dbContext.Sorteo on docente.Id equals sorteo.DocenteId into sorteoGroup
-                        from sg in sorteoGroup.DefaultIfEmpty()
-                        where sg == null
+
+            var query = from participante in dbContext.Participantes
+                        join docente in dbContext.Docentes on participante.DocenteId equals docente.Id
+                        where participante.ComisionId == comisionId
                         select new DocenteWithRolDto
                         {
                             Id = docente.Id,
@@ -91,8 +79,7 @@ namespace Washyn.UNAJ.Lot
                             Area = docente.Area,
                         };
 
-            var resultList = await query.ToListAsync();
-            return resultList;
+            return await query.ToListAsync();
         }
 
         public async Task<long> GetCountAsync(string? filter = null)
@@ -107,13 +94,17 @@ namespace Washyn.UNAJ.Lot
             return query.WhereIf(!string.IsNullOrEmpty(filter), a => a.FullName.ToLower().Contains(filter.ToLower()));
         }
 
+        /// <summary>
+        /// As improvement check if can be add grade of docente.
+        /// </summary>
+        /// <returns></returns>
         public async Task<IQueryable<DocenteRoleData>> GetQueryableAsync()
         {
             var dbContext = await GetDbContextAsync();
             var queryable = from sorteo in dbContext.Sorteo
                             join docente in dbContext.Docentes on sorteo.DocenteId equals docente.Id
                             join rol in dbContext.Rols on sorteo.RolId equals rol.Id
-                            // join grado in dbContext.Grados on docente.Id equals grado.Id
+                            join comision in dbContext.Comisions on sorteo.ComisionId equals comision.Id
                             select new DocenteRoleData
                             {
                                 Id = docente.Id,
@@ -132,10 +123,10 @@ namespace Washyn.UNAJ.Lot
                                 IsDeleted = docente.IsDeleted,
                                 LastModificationTime = docente.LastModificationTime,
                                 LastModifierId = docente.LastModifierId,
+                                RolName = rol.Nombre,
+                                Comision = comision.Nombre,
                                 // GradoName = grado.Nombre,
                                 // GradoPrefix = grado.Prefix,
-                                RolName = rol.Nombre,
-                                Comision = "COMISIÓN DE ELABORACIÓN"
                             };
             return queryable;
         }

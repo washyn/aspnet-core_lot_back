@@ -6,7 +6,6 @@ using Volo.Abp.Application.Services;
 using Volo.Abp.Domain.Repositories;
 using Volo.Abp.Domain.Repositories.EntityFrameworkCore;
 using Volo.Abp.EntityFrameworkCore;
-using Volo.Abp.Uow;
 using Washyn.UNAJ.Lot.Data;
 
 namespace Washyn.UNAJ.Lot.Services;
@@ -39,7 +38,10 @@ public class ComisionAppService : CrudAppService<Comision, ComisionDto, Guid, Pa
         return ObjectMapper.Map<Comision, ComisionWithRoles>(comision);
     }
 
-    // NOTE: GetAllWithRoles
+    /// <summary>
+    /// Return all comisions with roles.
+    /// </summary>
+    /// <returns></returns>
     public async Task<List<ComisionWithRoles>> GetAllWithDetails()
     {
         var temp = await _comisionRepository.GetAllWithRoles();
@@ -48,8 +50,7 @@ public class ComisionAppService : CrudAppService<Comision, ComisionDto, Guid, Pa
 
     public async Task AssignToComision(Guid comisionId, List<Guid> docentes)
     {
-        await RemoveParticipantes(comisionId, docentes);
-        await CreateParticipantes(comisionId, docentes);
+        await _comisionRepository.UpdateParticipantes(comisionId, docentes);
     }
 
     public async Task<List<DocenteLookup>> GetParticipantes(Guid comisionId)
@@ -62,6 +63,7 @@ public class ComisionAppService : CrudAppService<Comision, ComisionDto, Guid, Pa
     //     // validate per element...
     // }
 
+    [Obsolete]
     public async Task DeleteIntegrante(Guid integranteId, Guid comisionId)
     {
     }
@@ -81,45 +83,6 @@ public class ComisionAppService : CrudAppService<Comision, ComisionDto, Guid, Pa
         var data = await _comisionRepository.GetAll();
         return data;
     }
-
-
-    #region Privates
-
-    [UnitOfWork]
-    private async Task CreateParticipantes(Guid comisionId, List<Guid> docente)
-    {
-        foreach (var item in docente)
-        {
-            var element = await participanteRepository
-                .FindAsync(a => a.ComisionId == comisionId && a.DocenteId == item);
-
-            if (element is null)
-            {
-                await this.participanteRepository.InsertAsync(new Participante
-                {
-                    ComisionId = comisionId,
-                    DocenteId = item
-                });
-            }
-        }
-    }
-
-    [UnitOfWork]
-    private async Task RemoveParticipantes(Guid comisionId, List<Guid> docente)
-    {
-        foreach (var item in docente)
-        {
-            var element = await participanteRepository
-                .FindAsync(a => a.ComisionId == comisionId && a.DocenteId == item);
-
-            if (element is not null)
-            {
-                await this.participanteRepository.DeleteAsync(element);
-            }
-        }
-    }
-    #endregion
-
 }
 
 public class AsignComisionDto
@@ -157,6 +120,7 @@ public class DocenteLookup : EntityDto<Guid>
 
 public interface IComisionRepository : IRepository<Comision, Guid>
 {
+    Task UpdateParticipantes(Guid comisionId, List<Guid> docentes);
     Task<List<DocenteLookup>> GetAll();
     Task<List<Comision>> GetAllWithRoles();
 }
@@ -167,7 +131,28 @@ public class ComisionRepository : EfCoreRepository<LotDbContext, Comision, Guid>
     {
     }
 
-    // Get comision with roles ...
+    public async Task UpdateParticipantes(Guid comisionId, List<Guid> docentes)
+    {
+        var dbContext = await GetDbContextAsync();
+
+        await dbContext
+            .Participantes
+            .Where(a => a.ComisionId == a.ComisionId)
+            .ExecuteDeleteAsync();
+
+        var data = docentes.Select(a => new Participante
+        {
+            ComisionId = comisionId,
+            DocenteId = a
+        });
+
+        await dbContext.Participantes.AddRangeAsync(data);
+    }
+
+    /// <summary>
+    /// Get comision with roles.
+    /// </summary>
+    /// <returns></returns>
     public async Task<List<DocenteLookup>> GetAll()
     {
         var dbContext = await GetDbContextAsync();
