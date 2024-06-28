@@ -31,6 +31,7 @@ namespace Washyn.UNAJ.Lot.Services
         {
             // set to db... as json ...
             // create or update...
+
             var setting = await Repository.GetAsync(a => a.Key == ConfiguracionConts.GENERAL_OPTIONS);
             if (setting is null)
             {

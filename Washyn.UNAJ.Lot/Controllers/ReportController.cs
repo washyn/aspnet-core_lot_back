@@ -54,7 +54,7 @@ namespace Washyn.UNAJ.Lot.Controllers
         {
             var sorteo = await lotResultRepository.GetPagedListAsync(null, 0, 1000, null);
             var ms = new MemoryStream(GenerateAllDocuments(sorteo));
-            return new RemoteStreamContent(ms, "Reporte masivo.pdf", MimeTypes.Application.Pdf);
+            return new RemoteStreamContent(ms, "Reporte-masivo.pdf", MimeTypes.Application.Pdf);
         }
 
         private byte[] GenerateAllDocuments(List<DocenteRoleData> docentes)

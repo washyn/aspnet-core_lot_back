@@ -26,6 +26,7 @@ namespace Washyn.UNAJ.Lot
         {
         }
 
+        // TODO: agregar comision para mostrar en el informe ...
         public async Task<List<DocenteRoleData>> GetPagedListAsync(string? filter = null, int skipCount = 0,
             int maxResultCount = int.MaxValue, string sorting = null)
         {
@@ -36,6 +37,9 @@ namespace Washyn.UNAJ.Lot
 
         public async Task<List<DocenteWithRolDto>> GetAlreadyWithLot()
         {
+            // TODO: change this query,
+            // participantes de comision una comision que ya tengan un rol aun asignado
+            // ... 
             var dbContext = await this.GetDbContextAsync();
             var queryable = from sorteo in dbContext.Sorteo
                             join docente in dbContext.Docentes on sorteo.DocenteId equals docente.Id
@@ -58,8 +62,12 @@ namespace Washyn.UNAJ.Lot
         }
 
 
+        
+        
         public async Task<List<DocenteWithRolDto>> GetWithoutLot()
         {
+            // TODO: change this query
+            // participantes de comision una comision que no tengan un rol aun asignado
             var dbContext = await this.GetDbContextAsync();
             var query = from docente in dbContext.Docentes
                         join sorteo in dbContext.Sorteo on docente.Id equals sorteo.DocenteId into sorteoGroup
