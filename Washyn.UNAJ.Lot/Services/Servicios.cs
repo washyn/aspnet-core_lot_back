@@ -9,6 +9,9 @@ using Washyn.UNAJ.Lot.Services;
 
 namespace Acme.BookStore.Services;
 
+/// <summary>
+/// Crud de docentes
+/// </summary>
 public class DocenteAppService : CrudAppService<Docente, DocenteDto, DocenteWithLookup, Guid, DocenteFilter,
     CreateUpdateDocenteDto, CreateUpdateDocenteDto>
 {
@@ -40,6 +43,9 @@ public class DocenteAppService : CrudAppService<Docente, DocenteDto, DocenteWith
     }
 }
 
+/// <summary>
+/// Servicio se selects...
+/// </summary>
 public class SelectAppService : ApplicationService
 {
     private readonly IRepository<Rol> _rolRepository;

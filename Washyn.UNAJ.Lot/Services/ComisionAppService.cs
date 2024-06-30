@@ -10,27 +10,27 @@ using Washyn.UNAJ.Lot.Data;
 
 namespace Washyn.UNAJ.Lot.Services;
 
+/// <summary>
+/// Servicio para cru de comision y detalles
+/// </summary>
 public class ComisionAppService : CrudAppService<Comision, ComisionDto, Guid, PagedAndSortedResultRequestDto>
 {
     private readonly IComisionRepository _comisionRepository;
-    private readonly IParticipanteRepository participanteRepository;
     private readonly IRepository<Rol> _rolRepository;
 
     public ComisionAppService(IRepository<Comision, Guid> repository,
         IComisionRepository comisionRepository,
-        IParticipanteRepository participanteRepository,
         IRepository<Rol> rolRepository) : base(repository)
     {
         _comisionRepository = comisionRepository;
-        this.participanteRepository = participanteRepository;
         _rolRepository = rolRepository;
     }
 
-    public async Task<List<DocenteLookup>> GetDocente()
-    {
-        return await _comisionRepository.GetAll();
-    }
-
+    /// <summary>
+    /// Retorna una comision con sus roles.
+    /// </summary>
+    /// <param name="comisionId"></param>
+    /// <returns></returns>
     public async Task<ComisionWithRoles> GetWithDetails(Guid comisionId)
     {
         var temp = await _comisionRepository.GetAllWithRoles();
@@ -47,27 +47,11 @@ public class ComisionAppService : CrudAppService<Comision, ComisionDto, Guid, Pa
         var temp = await _comisionRepository.GetAllWithRoles();
         return ObjectMapper.Map<List<Comision>, List<ComisionWithRoles>>(temp);
     }
-
-    public async Task AssignToComision(Guid comisionId, List<Guid> docentes)
-    {
-        await _comisionRepository.UpdateParticipantes(comisionId, docentes);
-    }
-
-    public async Task<List<DocenteLookup>> GetParticipantes(Guid comisionId)
-    {
-        return await participanteRepository.GetAllParticipantes(comisionId);
-    }
-
-    // public async Task AssignToComision(List<Guid> data)
-    // {
-    //     // validate per element...
-    // }
-
-    [Obsolete]
-    public async Task DeleteIntegrante(Guid integranteId, Guid comisionId)
-    {
-    }
-
+    
+    /// <summary>
+    /// Agrega un rol a una comision.
+    /// </summary>
+    /// <param name="model"></param>
     public async Task AddRol(AddRol model)
     {
         await _rolRepository.InsertAsync(new Rol()
@@ -76,12 +60,6 @@ public class ComisionAppService : CrudAppService<Comision, ComisionDto, Guid, Pa
             ComisionId = model.ComisionId,
             Nombre = model.Nombre
         });
-    }
-
-    public async Task<List<DocenteLookup>> GetDataByComisionAsync(Guid comisionId)
-    {
-        var data = await _comisionRepository.GetAll();
-        return data;
     }
 }
 
@@ -120,8 +98,6 @@ public class DocenteLookup : EntityDto<Guid>
 
 public interface IComisionRepository : IRepository<Comision, Guid>
 {
-    Task UpdateParticipantes(Guid comisionId, List<Guid> docentes);
-    Task<List<DocenteLookup>> GetAll();
     Task<List<Comision>> GetAllWithRoles();
 }
 
@@ -130,45 +106,7 @@ public class ComisionRepository : EfCoreRepository<LotDbContext, Comision, Guid>
     public ComisionRepository(IDbContextProvider<LotDbContext> dbContextProvider) : base(dbContextProvider)
     {
     }
-
-    public async Task UpdateParticipantes(Guid comisionId, List<Guid> docentes)
-    {
-        var dbContext = await GetDbContextAsync();
-
-        await dbContext
-            .Participantes
-            .Where(a => a.ComisionId == a.ComisionId)
-            .ExecuteDeleteAsync();
-
-        var data = docentes.Select(a => new Participante
-        {
-            ComisionId = comisionId,
-            DocenteId = a
-        });
-
-        await dbContext.Participantes.AddRangeAsync(data);
-    }
-
-    /// <summary>
-    /// Get comision with roles.
-    /// </summary>
-    /// <returns></returns>
-    public async Task<List<DocenteLookup>> GetAll()
-    {
-        var dbContext = await GetDbContextAsync();
-        var queryable = from docente in dbContext.Docentes
-                        select new DocenteLookup()
-                        {
-                            Id = docente.Id,
-                            // Dni = docente.Dni,
-                            // ApellidoMaterno = docente.ApellidoMaterno,
-                            // ApellidoPaterno = docente.ApellidoPaterno,
-                            // Nombre = docente.Nombre,
-                            FullName = docente.Nombre + " " + docente.ApellidoPaterno + " " + docente.ApellidoMaterno,
-                        };
-        return await queryable.ToListAsync();
-    }
-
+    
     public async Task<List<Comision>> GetAllWithRoles()
     {
         var dbContext = await GetDbContextAsync();

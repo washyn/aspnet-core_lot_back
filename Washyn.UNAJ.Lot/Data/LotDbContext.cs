@@ -5,6 +5,7 @@ using Volo.Abp.EntityFrameworkCore.Modeling;
 
 namespace Washyn.UNAJ.Lot.Data;
 
+//TODO: remover tabla de participantes, Mostrar el area en el modal de selecion y ...
 public class LotDbContext : AbpDbContext<LotDbContext>
 {
     public DbSet<Comision> Comisions { get; set; }
@@ -13,7 +14,6 @@ public class LotDbContext : AbpDbContext<LotDbContext>
     public DbSet<Rol> Rols { get; set; }
     public DbSet<Docente> Docentes { get; set; }
     public DbSet<Sorteo> Sorteo { get; set; }
-    public DbSet<Participante> Participantes { get; set; }
     public DbSet<AppSettings> AppSettings { get; set; }
 
     public LotDbContext(DbContextOptions<LotDbContext> options) : base(options)

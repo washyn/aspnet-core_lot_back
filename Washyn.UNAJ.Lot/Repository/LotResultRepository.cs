@@ -15,7 +15,6 @@ namespace Washyn.UNAJ.Lot
             int maxResultCount = int.MaxValue, string sorting = null);
 
         Task<long> GetCountAsync(string? filter = null);
-        Task<List<DocenteWithRolDto>> GetWithoutLot(Guid comisionId);
         Task<List<DocenteWithRolDto>> GetAlreadyWithLot(Guid comisionId);
     }
 
@@ -24,8 +23,7 @@ namespace Washyn.UNAJ.Lot
         public LotResultRepository(IDbContextProvider<LotDbContext> dbContextProvider) : base(dbContextProvider)
         {
         }
-
-        // TODO: agregar comision para mostrar en el informe ...
+        
         public async Task<List<DocenteRoleData>> GetPagedListAsync(string? filter = null, int skipCount = 0,
             int maxResultCount = int.MaxValue, string sorting = null)
         {
@@ -33,8 +31,7 @@ namespace Washyn.UNAJ.Lot
             query = string.IsNullOrEmpty(sorting) ? query : query.OrderBy(sorting);
             return await query.PageBy(skipCount, maxResultCount).ToListAsync();
         }
-
-        // TODO: change this query
+        
         public async Task<List<DocenteWithRolDto>> GetAlreadyWithLot(Guid comisionId)
         {
             var dbContext = await this.GetDbContextAsync();
@@ -58,29 +55,7 @@ namespace Washyn.UNAJ.Lot
                             };
             return await queryable.ToListAsync();
         }
-
-        public async Task<List<DocenteWithRolDto>> GetWithoutLot(Guid comisionId)
-        {
-            var dbContext = await this.GetDbContextAsync();
-
-            var query = from participante in dbContext.Participantes
-                        join docente in dbContext.Docentes on participante.DocenteId equals docente.Id
-                        where participante.ComisionId == comisionId
-                        select new DocenteWithRolDto
-                        {
-                            Id = docente.Id,
-                            Dni = docente.Dni,
-                            ApellidoMaterno = docente.ApellidoMaterno,
-                            ApellidoPaterno = docente.ApellidoPaterno,
-                            Nombre = docente.Nombre,
-                            FullName = docente.Nombre + " " + docente.ApellidoPaterno + " " + docente.ApellidoMaterno,
-                            Genero = docente.Genero,
-                            GradoId = docente.GradoId,
-                            Area = docente.Area,
-                        };
-
-            return await query.ToListAsync();
-        }
+        
 
         public async Task<long> GetCountAsync(string? filter = null)
         {
@@ -103,6 +78,7 @@ namespace Washyn.UNAJ.Lot
             var dbContext = await GetDbContextAsync();
             var queryable = from sorteo in dbContext.Sorteo
                             join docente in dbContext.Docentes on sorteo.DocenteId equals docente.Id
+                            // Can be join with docente para mostrar el grado.
                             join rol in dbContext.Rols on sorteo.RolId equals rol.Id
                             join comision in dbContext.Comisions on sorteo.ComisionId equals comision.Id
                             select new DocenteRoleData

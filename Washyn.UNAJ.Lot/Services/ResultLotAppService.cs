@@ -8,6 +8,9 @@ using Washyn.UNAJ.Lot.Controllers;
 
 namespace Washyn.UNAJ.Lot.Services
 {
+    /// <summary>
+    /// Servicio para administgrar sorteos.
+    /// </summary>
     public class ResultLotAppService : ApplicationService
     {
         private readonly ILotResultRepository lotResultRepository;
@@ -21,36 +24,16 @@ namespace Washyn.UNAJ.Lot.Services
         {
             return await lotResultRepository.GetAlreadyWithLot(comisionId);
         }
-
-        public async Task<List<DocenteWithRolDto>> GetWithoutLot(Guid comisionId)
-        {
-            return await lotResultRepository.GetWithoutLot(comisionId);
-        }
-
-        public async Task DeleteByDocenteIdAsync(Guid docenteId)
-        {
-            var element = await lotResultRepository.GetAsync(a => a.DocenteId == docenteId);
-            await lotResultRepository.DeleteAsync(element);
-        }
-
+        
         public async Task DeleteLotAsync(RemoveLotResultDto model)
         {
             var element =
-                await lotResultRepository.GetAsync(a => a.DocenteId == model.DocenteId && a.RolId == model.RoleId);
+                await lotResultRepository.GetAsync(a => a.DocenteId == model.DocenteId && a.RolId == model.RoleId && a.ComisionId == model.ComisionId);
             await lotResultRepository.DeleteAsync(element);
         }
 
         public async Task CreateLotAsync(CreateLotResultDto create)
         {
-            // validar que el docente ya este sorteado para evitar que tenga 2 roles...
-            var docenteAlreadyExists = await lotResultRepository
-                .AnyAsync(a => a.DocenteId == create.DocenteId
-                && a.ComisionId == create.ComisionId);
-            if (docenteAlreadyExists)
-            {
-                throw new UserFriendlyException("El docente ya esta sorteado en esta comision.");
-            }
-
             var exits = await lotResultRepository
                 .AnyAsync(a => a.DocenteId == create.DocenteId
                     && a.RolId == create.RoleId
@@ -58,7 +41,7 @@ namespace Washyn.UNAJ.Lot.Services
 
             if (exits)
             {
-                throw new UserFriendlyException("Ya existe un rol registrado para este participante.");
+                throw new UserFriendlyException("Este participante ya esta registrado.");
             }
 
             await lotResultRepository.InsertAsync(new Sorteo
@@ -69,6 +52,11 @@ namespace Washyn.UNAJ.Lot.Services
             });
         }
 
+        /// <summary>
+        /// Retorna la lista de docentes sorteados para la vista y para el reporte pdf.
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
         public async Task<PagedResultDto<DocenteRoleData>> GetListAsync(ResultLotFilterDto input)
         {
             var totalCount = await lotResultRepository.GetCountAsync(input.Filter);
@@ -97,15 +85,11 @@ namespace Washyn.UNAJ.Lot.Services
 
     public class RemoveLotResultDto
     {
+        [Required]
         public Guid DocenteId { get; set; }
+        [Required]
         public Guid RoleId { get; set; }
+        [Required]
         public Guid ComisionId { get; set; }
-    }
-
-
-    public class ResultLotDto : FullAuditedEntityDto
-    {
-        public string DocenteFullName { get; set; }
-        public string RolDisplay { get; set; }
     }
 }
