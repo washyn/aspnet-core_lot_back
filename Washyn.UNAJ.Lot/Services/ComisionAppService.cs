@@ -1,12 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Acme.BookStore.Entities;
-using Microsoft.EntityFrameworkCore;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
 using Volo.Abp.Domain.Repositories;
-using Volo.Abp.Domain.Repositories.EntityFrameworkCore;
-using Volo.Abp.EntityFrameworkCore;
-using Washyn.UNAJ.Lot.Data;
 
 namespace Washyn.UNAJ.Lot.Services;
 
@@ -61,14 +57,13 @@ public class ComisionAppService : CrudAppService<Comision, ComisionDto, Guid, Pa
             Nombre = model.Nombre
         });
     }
+    
+    public async Task RemoveRol(Guid rolId)
+    {
+        var rol = await _rolRepository.GetAsync(a => a.Id == rolId);
+        await _rolRepository.DeleteAsync(rol);
+    }
 }
-
-public class AsignComisionDto
-{
-    public Guid DocenteId { get; set; }
-    public Guid ComisionId { get; set; }
-}
-
 
 public class AddRol : IEntityDto
 {
@@ -89,29 +84,4 @@ public class ComisionWithRoles : EntityDto<Guid>
 {
     public string Nombre { get; set; }
     public List<RolDto> Rols { get; set; }
-}
-
-public class DocenteLookup : EntityDto<Guid>
-{
-    public string FullName { get; set; }
-}
-
-public interface IComisionRepository : IRepository<Comision, Guid>
-{
-    Task<List<Comision>> GetAllWithRoles();
-}
-
-public class ComisionRepository : EfCoreRepository<LotDbContext, Comision, Guid>, IComisionRepository
-{
-    public ComisionRepository(IDbContextProvider<LotDbContext> dbContextProvider) : base(dbContextProvider)
-    {
-    }
-    
-    public async Task<List<Comision>> GetAllWithRoles()
-    {
-        var dbContext = await GetDbContextAsync();
-        var queryable = dbContext.Comisions.Include(a => a.Rols);
-        var tempRes = await queryable.ToListAsync();
-        return tempRes;
-    }
 }
