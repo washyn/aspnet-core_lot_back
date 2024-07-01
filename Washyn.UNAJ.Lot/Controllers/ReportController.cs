@@ -17,16 +17,19 @@ namespace Washyn.UNAJ.Lot.Controllers
     [RemoteService]
     public class ReportController : AbpController
     {
-        private readonly DocumentOptions options;
+        private DocumentOptions options;
         private readonly IDocenteRepository docenteRepository;
+        private readonly ConfiguracionAppService configuracionAppService;
         private readonly ILotResultRepository lotResultRepository;
 
-        public ReportController(IOptionsMonitor<DocumentOptions> options,
+        public ReportController(IOptionsSnapshot<DocumentOptions> options,
             IDocenteRepository docenteRepository,
+            ConfiguracionAppService configuracionAppService,
             ILotResultRepository lotResultRepository)
         {
-            this.options = options.CurrentValue;
+            this.options = options.Value;
             this.docenteRepository = docenteRepository;
+            this.configuracionAppService = configuracionAppService;
             this.lotResultRepository = lotResultRepository;
         }
 
@@ -52,6 +55,11 @@ namespace Washyn.UNAJ.Lot.Controllers
         [Route("all-lot-result")]
         public async Task<IRemoteStreamContent> GetAllPdfReport()
         {
+            // load config from db
+
+            var comf = await configuracionAppService.GetConfig();
+            this.options = comf;
+
             var sorteo = await lotResultRepository.GetPagedListAsync(null, 0, 1000, null);
             var ms = new MemoryStream(GenerateAllDocuments(sorteo));
             return new RemoteStreamContent(ms, "Reporte-masivo.pdf", MimeTypes.Application.Pdf);
