@@ -194,6 +194,7 @@ namespace Washyn.UNAJ.Lot.Controllers
         }
 
         // IMPROVE: add extension method for add page and receve model ...
+        [Obsolete]
         private byte[] GenerateDocument(DocenteWithLookup docente)
         {
             QuestPDF.Settings.License = LicenseType.Community;

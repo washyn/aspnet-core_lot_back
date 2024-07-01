@@ -37,6 +37,7 @@ namespace Washyn.UNAJ.Lot
             var dbContext = await this.GetDbContextAsync();
             var queryable = from sorteo in dbContext.Sorteo
                             join docente in dbContext.Docentes on sorteo.DocenteId equals docente.Id
+                            join grado in dbContext.Grados on docente.GradoId equals grado.Id
                             join rol in dbContext.Rols on sorteo.RolId equals rol.Id
                             where sorteo.ComisionId == comisionId
                             select new DocenteWithRolDto()
@@ -49,6 +50,7 @@ namespace Washyn.UNAJ.Lot
                                 FullName = docente.Nombre + " " + docente.ApellidoPaterno + " " + docente.ApellidoMaterno,
                                 Genero = docente.Genero,
                                 GradoId = docente.GradoId,
+                                GradoPrefix = grado.Prefix,
                                 Area = docente.Area,
                                 RolId = rol.Id,
                                 RolName = rol.Nombre
@@ -78,6 +80,7 @@ namespace Washyn.UNAJ.Lot
             var dbContext = await GetDbContextAsync();
             var queryable = from sorteo in dbContext.Sorteo
                             join docente in dbContext.Docentes on sorteo.DocenteId equals docente.Id
+                            join grado in dbContext.Grados on docente.GradoId equals grado.Id
                             // Can be join with docente para mostrar el grado.
                             join rol in dbContext.Rols on sorteo.RolId equals rol.Id
                             join comision in dbContext.Comisions on sorteo.ComisionId equals comision.Id
@@ -91,6 +94,7 @@ namespace Washyn.UNAJ.Lot
                                 FullName = docente.Nombre + " " + docente.ApellidoPaterno + " " + docente.ApellidoMaterno,
                                 Genero = docente.Genero,
                                 GradoId = docente.GradoId,
+                                GradoPrefix = grado.Prefix,
                                 Area = docente.Area,
                                 CreationTime = docente.CreationTime,
                                 CreatorId = docente.CreatorId,
