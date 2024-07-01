@@ -67,7 +67,9 @@ public class LotModule : AbpModule
         {
             options.Kind = DateTimeKind.Local;
         });
-         
+        
+        
+        
         ConfigureMultiTenancy();
         ConfigureUrls(configuration);
         ConfigureAutoMapper(context);
@@ -235,13 +237,14 @@ public class LotModule : AbpModule
             app.UseDeveloperExceptionPage();
         }
 
+        app.UseDefaultFiles();
         app.UseAbpRequestLocalization();
 
         if (!env.IsDevelopment())
         {
             // app.UseErrorPage();
         }
-
+        
         app.UseCorrelationId();
         app.UseStaticFiles();
         app.UseRouting();
@@ -258,18 +261,25 @@ public class LotModule : AbpModule
         app.UseDynamicClaims();
         app.UseAuthorization();
 
-        app.UseSwagger();
-        app.UseAbpSwaggerUI(options =>
+        if (env.IsDevelopment())
         {
-            options.SwaggerEndpoint("/swagger/v1/swagger.json", "Lot API");
+            app.UseSwagger();
+            app.UseAbpSwaggerUI(options =>
+            {
+                options.SwaggerEndpoint("/swagger/v1/swagger.json", "Lot API");
 
-            var configuration = context.GetConfiguration();
-            options.OAuthClientId(configuration["AuthServer:SwaggerClientId"]);
-            options.OAuthScopes("Lot");
-        });
+                var configuration = context.GetConfiguration();
+                options.OAuthClientId(configuration["AuthServer:SwaggerClientId"]);
+                options.OAuthScopes("Lot");
+            });
+        }
 
         app.UseAuditing();
         app.UseAbpSerilogEnrichers();
         app.UseConfiguredEndpoints();
+        app.UseEndpoints(endpoints => 
+        {
+            endpoints.MapFallbackToFile("index.html");
+        });
     }
 }
