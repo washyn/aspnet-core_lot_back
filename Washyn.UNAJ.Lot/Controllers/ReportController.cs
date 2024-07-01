@@ -73,8 +73,8 @@ namespace Washyn.UNAJ.Lot.Controllers
                     {
                         page.Size(PageSizes.A4);
                         page.MarginHorizontal(2.5f, Unit.Centimetre);
-                        page.MarginTop(0.5f, Unit.Centimetre);
-                        page.MarginBottom(1, Unit.Centimetre);
+                        page.MarginTop(0.3f, Unit.Centimetre);
+                        page.MarginBottom(0.75f, Unit.Centimetre);
                         page.PageColor(Colors.White);
                         page.DefaultTextStyle(x => x.FontFamily("Arial"));
                         page.DefaultTextStyle(x => x.FontSize(11));
@@ -97,23 +97,23 @@ namespace Washyn.UNAJ.Lot.Controllers
                                 {
                                     row.Spacing(10);
                                     row.RelativeItem(2)
-                                        .Width(100)
+                                        .Width(80)
                                         .Image("unaj logo.png");
                                     row.RelativeItem(4)
                                         .DefaultTextStyle(a => a.FontSize(9))
                                         .DefaultTextStyle(a => a.FontFamily("Arial"))
                                         .Column(a =>
                                         {
-                                            a.Item().Text("UNIVERSIDAD  NACIONAL  DE JULIACA").AlignCenter().FontColor(Colors.Grey.Darken1);
-                                            a.Item().Text("CREADA  POR  LEY  N\u00b0  29074").AlignCenter().Italic().FontColor(Colors.Grey.Darken1);
-                                            a.Item().Text("DIRECCIÓN DE ADMISIÓN").AlignCenter().FontColor(Colors.Grey.Darken1);
+                                            a.Item().Text("UNIVERSIDAD  NACIONAL  DE JULIACA").AlignCenter().FontColor(Colors.Grey.Darken1).FontSize(8);
+                                            a.Item().Text("CREADA  POR  LEY  N\u00b0  29074").AlignCenter().Italic().FontColor(Colors.Grey.Darken1).FontSize(8);
+                                            a.Item().Text("DIRECCIÓN DE ADMISIÓN").AlignCenter().FontColor(Colors.Grey.Darken1).FontSize(8);
                                         });
                                     row.RelativeItem(2)
-                                        .Width(75)
+                                        .Width(55)
                                         .Image("direccion de admision logo.png");
                                 });
 
-                                x.Item().PaddingVertical(10).LineHorizontal(0.5f).LineColor(Colors.Black);
+                                x.Item().PaddingVertical(10).LineHorizontal(0.5f).LineColor(Colors.Grey.Darken1);
                             });
 
                         page.Content()
@@ -177,13 +177,14 @@ namespace Washyn.UNAJ.Lot.Controllers
                             .Column(x =>
                             {
                                 x.Item().Text("C.C.: Archivo");
-                                x.Item().PaddingVertical(5).LineHorizontal(0.5f).LineColor(Colors.Black);
+                                x.Item().PaddingVertical(5).LineHorizontal(0.5f).LineColor(Colors.Grey.Darken1);
                                 x
                                     .Item()
                                     .AlignCenter()
                                     .Text(
                                         "Av. Nueva Zelandia N\u00b0 631 Urbanización la capilla Teléfono 328722-Juliaca - Perú")
-                                    .FontSize(10);
+                                    .FontSize(10)
+                                    .FontColor(Colors.Grey.Darken1);
                             });
                     });
                 }
