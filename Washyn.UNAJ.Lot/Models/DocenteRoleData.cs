@@ -15,7 +15,11 @@ namespace Washyn.UNAJ.Lot.Controllers
         public Area? Area { get; set; }
 
         public string FullName { get; set; }
+
         public string RolName { get; set; }
+        public Guid RolId { get; set; }
+
         public string Comision { get; set; }
+        public Guid ComisionId { get; set; }
     }
 }
